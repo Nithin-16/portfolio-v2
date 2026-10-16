@@ -375,7 +375,7 @@ export default function App() {
             <div className="work-grid">
 
               {/* 01 / 03: Blazeup — Full Width Featured Card */}
-              <a href="#blazeup-case-study" className="work-featured-card">
+              <a href="http://localhost:5174" target="_blank" rel="noreferrer" className="work-featured-card">
                 <div className="work-featured-content">
                   <span className="work-card-counter">01 / 03</span>
 

@@ -258,7 +258,7 @@ export default function App() {
   };
 
   const handleCopyEmail = () => {
-    navigator.clipboard.writeText('nithin.kumar@gmail.com');
+    navigator.clipboard.writeText('nithin161298@gmail.com');
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -653,7 +653,7 @@ export default function App() {
 
                 <div className="about-social-links">
                   <a
-                    href="https://linkedin.com/in/nithin-kumar"
+                    href="https://www.linkedin.com/in/nithin-kumar-97a85a139"
                     target="_blank"
                     rel="noreferrer"
                     className="about-social-btn"
@@ -666,7 +666,7 @@ export default function App() {
                   </a>
 
                   <a
-                    href="https://behance.net"
+                    href="https://www.behance.net/nithinkumar"
                     target="_blank"
                     rel="noreferrer"
                     className="about-social-btn"
@@ -922,12 +922,12 @@ export default function App() {
                 {/* Interactive Email Pill */}
                 <div className="contact-email-pill">
                   <a
-                    href="mailto:nithin.kumar@gmail.com"
+                    href="mailto:nithin161298@gmail.com"
                     className="contact-email-link"
-                    aria-label="Send email to nithin.kumar@gmail.com"
+                    aria-label="Send email to nithin161298@gmail.com"
                   >
                     <Mail size={16} className="contact-email-icon" />
-                    <span>nithin.kumar@gmail.com</span>
+                    <span>nithin161298@gmail.com</span>
                   </a>
 
                   <span className="contact-email-sep" />
@@ -970,10 +970,10 @@ export default function App() {
                   <div className="footer-col">
                     <span className="footer-col-title">SOCIALS</span>
                     <div className="footer-col-links">
-                      <a href="https://linkedin.com/in/nithin-kumar" target="_blank" rel="noreferrer">
+                      <a href="https://www.linkedin.com/in/nithin-kumar-97a85a139" target="_blank" rel="noreferrer">
                         LinkedIn
                       </a>
-                      <a href="https://behance.net" target="_blank" rel="noreferrer">
+                      <a href="https://www.behance.net/nithinkumar" target="_blank" rel="noreferrer">
                         Behance
                       </a>
                     </div>

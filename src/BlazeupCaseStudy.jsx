@@ -44,7 +44,7 @@ export default function BlazeupCaseStudy({ onBack, onNavigate }) {
       window.scrollTo({ top: 0, behavior: "instant" });
     } else {
       setIsShaking(true);
-      setErrorMessage("Incorrect password. Please try again or use the reviewer key below.");
+      setErrorMessage("Incorrect password. Please try again or request access.");
       setTimeout(() => setIsShaking(false), 500);
     }
   };
@@ -177,20 +177,14 @@ export default function BlazeupCaseStudy({ onBack, onNavigate }) {
                 </button>
               </form>
 
-              {/* Reviewer Key Hint */}
+              {/* Access Request Note */}
               <div className="case-gate-hint-box">
-                <span className="case-gate-hint-text">Review access password:</span>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setPasswordInput("blazeup");
-                    if (inputRef.current) inputRef.current.focus();
-                  }}
-                  className="case-gate-hint-code"
-                  title="Click to fill password"
-                >
-                  blazeup
-                </button>
+                <span className="case-gate-hint-text">
+                  For portfolio review access, please contact{" "}
+                  <a href="mailto:nithin161298@gmail.com" className="case-gate-contact-link">
+                    nithin161298@gmail.com
+                  </a>
+                </span>
               </div>
             </div>
           </div>

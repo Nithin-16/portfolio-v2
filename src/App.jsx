@@ -704,7 +704,7 @@ export default function App() {
                   <span className="exp-num">01</span>
                   <div className="exp-main-col">
                     <h3 className="exp-company-name">Lollypop Design Studio</h3>
-                    <p className="exp-role-date">UI/UX Intern &nbsp;·&nbsp; Feb 2026 – Present</p>
+                    <p className="exp-role-date">UI/UX Intern &nbsp;·&nbsp; Feb 2026 – Sep 2026</p>
                   </div>
                   <span className="exp-type-badge">INTERNSHIP</span>
                 </div>
@@ -713,9 +713,9 @@ export default function App() {
                   <span className="exp-num">02</span>
                   <div className="exp-main-col">
                     <h3 className="exp-company-name">Swantech Solutions</h3>
-                    <p className="exp-role-date">Visual Designer &nbsp;·&nbsp; Sep 2023 – Present</p>
+                    <p className="exp-role-date">Freelance Visual Designer &nbsp;·&nbsp; Sep 2023 – Present</p>
                   </div>
-                  <span className="exp-type-badge">FULL TIME</span>
+                  <span className="exp-type-badge">FREELANCE</span>
                 </div>
 
                 <div className="exp-row">

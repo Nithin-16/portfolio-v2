@@ -296,15 +296,14 @@ export default function App() {
                 aria-label="Nithin Kumar"
               >
                 <span className="brand-badge">
-                  <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path
-                      d="M5 23V5L23 23V5"
-                      stroke="currentColor"
-                      strokeWidth="2.2"
-                      strokeLinecap="square"
-                      strokeLinejoin="miter"
-                    />
-                  </svg>
+                  <img
+                    src="/logo.png"
+                    srcSet="/logo.png 1x, /logo@2x.png 2x"
+                    alt="Nithin Kumar"
+                    className="brand-logo-img"
+                    width="25"
+                    height="26"
+                  />
                 </span>
               </a>
 

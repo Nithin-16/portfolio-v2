@@ -504,7 +504,11 @@ picture {
 }
 
 .brand-mark:hover {
-  opacity: 0.65;
+  opacity: 0.7;
+}
+
+.brand-mark:hover .brand-logo-img {
+  transform: scale(1.05);
 }
 
 .brand-badge {
@@ -516,6 +520,18 @@ picture {
   border-radius: 8px;
   background: transparent;
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.brand-logo-img,
+.brand-badge img {
+  width: auto;
+  height: 26px;
+  max-width: 100%;
+  object-fit: contain;
+  display: block;
+  user-select: none;
+  -webkit-user-drag: none;
+  transition: height 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .brand-badge svg {
@@ -530,6 +546,11 @@ picture {
   height: 34px;
   background: rgba(23, 23, 26, 0.06);
   border-radius: 9px;
+}
+
+.navbar.scrolled .brand-logo-img,
+.navbar.scrolled .brand-badge img {
+  height: 20px;
 }
 
 .navbar.scrolled .brand-badge svg {

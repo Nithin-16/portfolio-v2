@@ -2584,6 +2584,34 @@ picture {
   margin-top: auto;
 }
 
+.additional-card-cta.is-coming-soon {
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: var(--font-weight-medium);
+  letter-spacing: -0.01em;
+  gap: 8px;
+  transition: color 0.25s ease;
+}
+
+.additional-card-soon-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--text-muted);
+  opacity: 0.6;
+  transition: background-color 0.25s ease, opacity 0.25s ease, transform 0.25s ease;
+}
+
+.additional-card:hover .additional-card-cta.is-coming-soon {
+  color: var(--text-primary);
+}
+
+.additional-card:hover .additional-card-soon-dot {
+  background-color: var(--text-primary);
+  opacity: 1;
+  transform: scale(1.2);
+}
+
 .additional-cta-arrow {
   transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }

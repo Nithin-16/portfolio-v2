@@ -757,14 +757,14 @@ export default function App() {
             {/* 3-Card Grid */}
             <div className="additional-cards-grid">
 
-              {/* Card 1: Log9 */}
-              <a href="#log9" className="additional-card">
+              {/* Card 1: Bayard Vacations */}
+              <div className="additional-card">
                 <div className="additional-card-visual">
                   <picture>
-                    <source srcSet="/additional-log9@2x.webp" type="image/webp" />
+                    <source srcSet="/additional-bayard@2x.webp" type="image/webp" />
                     <img
-                      src="/additional-log9@2x.png"
-                      alt="Log9 branding and visual identity"
+                      src="/additional-bayard@2x.png"
+                      alt="Bayard Vacations mobile travel app mockup"
                       className="additional-card-img"
                       loading="lazy"
                     />
@@ -772,27 +772,27 @@ export default function App() {
                 </div>
                 <div className="additional-card-body">
                   <div>
-                    <span className="additional-card-category">BRANDING &amp; VISUAL IDENTITY</span>
-                    <h3 className="additional-card-title">Log9</h3>
+                    <span className="additional-card-category">UI/UX DESIGN · TOURISM &amp; TRAVEL</span>
+                    <h3 className="additional-card-title">Bayard Vacations</h3>
                     <p className="additional-card-desc">
-                      Built a cohesive brand identity for a next-gen EV battery company, including logo, typography, color system and brand collateral.
+                      A mobile travel and tourism platform designed for personalized trip planning, bespoke itineraries, and destination discovery.
                     </p>
                   </div>
-                  <div className="additional-card-cta">
-                    <span>View project</span>
-                    <ArrowRight size={14} className="additional-cta-arrow" />
+                  <div className="additional-card-cta is-coming-soon">
+                    <span className="additional-card-soon-dot" />
+                    <span>Coming soon</span>
                   </div>
                 </div>
-              </a>
+              </div>
 
-              {/* Card 2: Altavista */}
-              <a href="#altavista" className="additional-card">
+              {/* Card 2: Alta Vista */}
+              <div className="additional-card">
                 <div className="additional-card-visual">
                   <picture>
                     <source srcSet="/additional-altavista@2x.webp" type="image/webp" />
                     <img
                       src="/additional-altavista@2x.png"
-                      alt="Altavista travel discovery concept"
+                      alt="Alta Vista Homes luxury automation hero design"
                       className="additional-card-img"
                       loading="lazy"
                     />
@@ -800,27 +800,27 @@ export default function App() {
                 </div>
                 <div className="additional-card-body">
                   <div>
-                    <span className="additional-card-category">UI/UX DESIGN (CONCEPT)</span>
-                    <h3 className="additional-card-title">Altavista</h3>
+                    <span className="additional-card-category">WEBSITE DESIGN · SMART HOME &amp; AUTOMATION</span>
+                    <h3 className="additional-card-title">Alta Vista</h3>
                     <p className="additional-card-desc">
-                      A travel discovery app concept designed for curious explorers and modern travellers.
+                      Designed the marketing website for Alta Vista Homes, highlighting architectural lighting systems, luxury automation, and connected living.
                     </p>
                   </div>
-                  <div className="additional-card-cta">
-                    <span>View project</span>
-                    <ArrowRight size={14} className="additional-cta-arrow" />
+                  <div className="additional-card-cta is-coming-soon">
+                    <span className="additional-card-soon-dot" />
+                    <span>Coming soon</span>
                   </div>
                 </div>
-              </a>
+              </div>
 
-              {/* Card 3: Tiny Veda */}
-              <a href="#tiny-veda" className="additional-card">
+              {/* Card 3: Log9 */}
+              <div className="additional-card">
                 <div className="additional-card-visual">
                   <picture>
-                    <source srcSet="/additional-tinyveda@2x.webp" type="image/webp" />
+                    <source srcSet="/additional-log9@2x.webp" type="image/webp" />
                     <img
-                      src="/additional-tinyveda@2x.png"
-                      alt="Tiny Veda baby food brand and packaging"
+                      src="/additional-log9@2x.png"
+                      alt="Log9 ZappUp MEGA clean tech energy storage"
                       className="additional-card-img"
                       loading="lazy"
                     />
@@ -828,18 +828,18 @@ export default function App() {
                 </div>
                 <div className="additional-card-body">
                   <div>
-                    <span className="additional-card-category">BRAND CONSULTING &amp; PACKAGING</span>
-                    <h3 className="additional-card-title">Tiny Veda</h3>
+                    <span className="additional-card-category">CLEANTECH · BATTERY TECH &amp; BAAS</span>
+                    <h3 className="additional-card-title">Log9</h3>
                     <p className="additional-card-desc">
-                      Explored a premium baby food brand concept rooted in ancient wisdom and modern nutrition.
+                      Advanced energy storage R&amp;D and digital experience for Log9’s ZappUp MEGA platform, delivering utility-scale Battery-as-a-Service (BaaS).
                     </p>
                   </div>
-                  <div className="additional-card-cta">
-                    <span>View project</span>
-                    <ArrowRight size={14} className="additional-cta-arrow" />
+                  <div className="additional-card-cta is-coming-soon">
+                    <span className="additional-card-soon-dot" />
+                    <span>Coming soon</span>
                   </div>
                 </div>
-              </a>
+              </div>
 
             </div>
 

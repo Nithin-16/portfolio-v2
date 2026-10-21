@@ -1,0 +1,912 @@
+/* =========================================================================
+   BLAZEUP CASE STUDY — Warm Tone Design System Integration
+   Adopts Portfolio V2's exact warm light canvas, cream surfaces, and ink tokens
+   ========================================================================= */
+
+:root {
+  --case-accent: var(--text-primary);
+  --case-accent-hover: #000000;
+  --case-warm-bg: var(--bg-surface-warm);   /* #EDEAE2 */
+  --case-warm-card: var(--bg-surface-card); /* #E2DFD7 */
+  --case-warm-subtle: var(--bg-surface-subtle); /* #F0EEE8 */
+  --case-border: var(--border-light);       /* #E2E0D8 */
+  --case-border-medium: var(--border-medium); /* #CFCDC5 */
+}
+
+/* ── READING PROGRESS BAR ────────────────────────────────── */
+.case-progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background-color: var(--text-primary);
+  transform-origin: left;
+  z-index: 1000;
+  pointer-events: none;
+  transition: transform 0.1s linear;
+}
+
+picture {
+  display: contents;
+}
+
+/* ── OUTER WRAPPER ───────────────────────────────────────── */
+.case-study-page {
+  background-color: var(--bg-canvas);
+  min-height: 100vh;
+  padding-top: 100px;
+  color: var(--text-primary);
+  font-family: var(--font-family-body);
+}
+
+/* ── TOP ACTION BAR (Back link + Lock badge) ─────────────── */
+.case-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 32px;
+}
+
+.case-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-family-body);
+  font-size: 14px;
+  font-weight: var(--font-weight-medium);
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color 0.25s ease, transform 0.25s ease;
+}
+
+.case-back-link:hover {
+  color: var(--text-primary);
+  transform: translateX(-4px);
+}
+
+.case-back-arrow {
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.case-back-link:hover .case-back-arrow {
+  transform: translateX(-3px);
+}
+
+.case-lock-status-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: var(--bg-surface-warm);
+  border: 1px solid var(--border-light);
+  color: var(--text-secondary);
+  font-family: var(--font-family-body);
+  font-size: 12px;
+  font-weight: var(--font-weight-medium);
+  padding: 6px 14px;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.case-lock-status-btn:hover {
+  background-color: var(--bg-surface-card);
+  border-color: var(--border-medium);
+  color: var(--text-primary);
+}
+
+/* ── SECTION CONTAINER & WARM SPACING ────────────────────── */
+.case-section {
+  padding: 80px 0;
+  position: relative;
+}
+
+/* Warm tinted canvas sections (matches homepage warm rhythm) */
+.case-section-tinted {
+  background-color: var(--bg-surface-warm);
+  border-top: 1px solid var(--border-light);
+  border-bottom: 1px solid var(--border-light);
+}
+
+/* Section Header */
+.case-section-divider {
+  width: 100%;
+  height: 1px;
+  background-color: var(--border-light);
+  margin-bottom: 40px;
+}
+
+.case-eyebrow-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.case-eyebrow-text {
+  font-family: var(--font-family-body);
+  font-size: var(--text-eyebrow-size);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--text-eyebrow-tracking);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.case-eyebrow-line {
+  height: 1px;
+  width: 72px;
+  background: linear-gradient(90deg, var(--border-medium), transparent);
+  opacity: 0.8;
+}
+
+.case-section-head-grid {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 48px;
+  align-items: flex-start;
+  margin-bottom: 48px;
+}
+
+.case-section-title {
+  font-family: var(--font-family-display);
+  font-size: clamp(28px, 3.2vw, 42px);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.case-section-intro {
+  font-family: var(--font-family-body);
+  font-size: 16px;
+  line-height: 1.65;
+  color: var(--text-secondary);
+  margin: 0;
+  padding-top: 6px;
+}
+
+/* ── 01. CASE HERO ───────────────────────────────────────── */
+.case-hero {
+  padding-bottom: 60px;
+}
+
+.case-hero-title {
+  font-family: var(--font-family-display);
+  font-size: clamp(34px, 4.2vw, 58px);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: -0.03em;
+  line-height: 1.12;
+  color: var(--text-primary);
+  margin: 0 0 20px 0;
+  max-width: 900px;
+}
+
+.case-hero-title-accent {
+  font-weight: var(--font-weight-extrabold);
+  color: var(--text-primary);
+}
+
+.case-hero-desc {
+  font-family: var(--font-family-body);
+  font-size: clamp(16px, 1.3vw, 20px);
+  line-height: 1.6;
+  color: var(--text-secondary);
+  max-width: 680px;
+  margin: 0 0 28px 0;
+}
+
+.case-award-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background-color: var(--bg-surface-warm);
+  border: 1px solid var(--border-light);
+  color: var(--text-primary);
+  font-family: var(--font-family-body);
+  font-size: 13px;
+  font-weight: var(--font-weight-medium);
+  padding: 8px 18px;
+  border-radius: 9999px;
+  margin-bottom: 44px;
+}
+
+.case-award-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: var(--text-secondary);
+  display: inline-block;
+}
+
+/* Meta Data List */
+.case-meta-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 28px;
+  border-top: 1px solid var(--border-light);
+  padding-top: 28px;
+  margin-bottom: 48px;
+}
+
+.case-meta-label {
+  font-family: var(--font-family-body);
+  font-size: var(--text-badge-size);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--text-badge-tracking);
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.case-meta-value {
+  font-family: var(--font-family-body);
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+/* Hero Visual Card (Warm Limestone/Studio Gradient) */
+.case-hero-visual-card {
+  position: relative;
+  width: 100%;
+  border-radius: 20px;
+  corner-shape: squircle;
+  -webkit-corner-smoothing: 0.6;
+  overflow: hidden;
+  background: linear-gradient(135deg, #E6E2D8 0%, #EDEAE2 50%, #F5F3ED 100%);
+  border: 1px solid var(--border-light);
+  padding: 5% 5% 6% 5%;
+  box-shadow: 0 24px 48px -20px rgba(23, 23, 26, 0.08);
+}
+
+.case-hero-visual-wrap {
+  position: relative;
+  width: 100%;
+}
+
+.case-hero-main-img {
+  display: block;
+  width: 82%;
+  height: auto;
+  border-radius: 12px;
+  border: 1px solid var(--border-light);
+  box-shadow: 0 32px 64px -24px rgba(23, 23, 26, 0.25);
+}
+
+.case-hero-drawer-img {
+  position: absolute;
+  right: 0;
+  top: 7%;
+  width: 28%;
+  height: auto;
+  border-radius: 12px;
+  border: 1px solid var(--border-light);
+  box-shadow: 0 32px 64px -20px rgba(23, 23, 26, 0.3);
+}
+
+/* ── GENERIC FRAME & CAPTION ────────────────────────────── */
+.case-frame {
+  overflow: hidden;
+  border-radius: 16px;
+  corner-shape: squircle;
+  -webkit-corner-smoothing: 0.6;
+  border: 1px solid var(--border-light);
+  background-color: #FFFFFF;
+  box-shadow: 0 16px 40px -20px rgba(23, 23, 26, 0.08);
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+
+.case-frame img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.case-caption {
+  font-family: var(--font-family-body);
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin-top: 12px;
+}
+
+/* ── 02. OVERVIEW 2-COLUMN CARDS ────────────────────────── */
+.case-overview-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  margin-top: 36px;
+}
+
+.case-overview-card {
+  border-top: 1px solid var(--border-light);
+  padding-top: 24px;
+}
+
+.case-card-kicker {
+  font-family: var(--font-family-body);
+  font-size: 12px;
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--text-badge-tracking);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  margin-bottom: 10px;
+}
+
+.case-card-body {
+  font-family: var(--font-family-body);
+  font-size: 16px;
+  line-height: 1.65;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+/* ── 03. CHALLENGE & USERS (Persona Cards) ──────────────── */
+.case-users-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+  margin-bottom: 32px;
+}
+
+.case-user-card {
+  background-color: #FFFFFF;
+  border: 1px solid var(--border-light);
+  border-radius: 18px;
+  corner-shape: squircle;
+  -webkit-corner-smoothing: 0.6;
+  padding: 36px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+}
+
+.case-user-num {
+  font-family: var(--font-family-body);
+  font-size: 12px;
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--text-badge-tracking);
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+
+.case-user-role {
+  font-family: var(--font-family-display);
+  font-size: 24px;
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+  margin: 0 0 12px 0;
+}
+
+/* ── 04. PROCESS & AUDITING ─────────────────────────────── */
+.case-steps-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+}
+
+.case-step-card {
+  border-top: 1px solid var(--border-light);
+  padding-top: 24px;
+}
+
+.case-step-num {
+  font-family: var(--font-family-body);
+  font-size: 12px;
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--text-badge-tracking);
+  color: var(--text-muted);
+}
+
+.case-step-title {
+  font-family: var(--font-family-display);
+  font-size: 20px;
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+  margin: 12px 0 8px 0;
+}
+
+/* ── 05. INTERACTIVE PIN FIGURE (Dark Ink Pins) ─────────── */
+.case-pin-figure {
+  width: 100%;
+}
+
+.case-pin-container {
+  position: relative;
+  overflow: hidden;
+  border-radius: 16px;
+  corner-shape: squircle;
+  -webkit-corner-smoothing: 0.6;
+  border: 1px solid var(--border-light);
+  background-color: #FFFFFF;
+  box-shadow: 0 20px 48px -20px rgba(23, 23, 26, 0.12);
+}
+
+.case-pin-img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.case-pin-btn {
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background-color: var(--text-primary);
+  color: #FFFFFF;
+  font-family: var(--font-family-body);
+  font-size: 12px;
+  font-weight: var(--font-weight-semibold);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 0 4px rgba(23, 23, 26, 0.15);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+  z-index: 10;
+}
+
+.case-pin-btn:hover,
+.case-pin-btn.is-active {
+  transform: translate(-50%, -50%) scale(1.15);
+  box-shadow: 0 0 0 7px rgba(23, 23, 26, 0.3);
+}
+
+.case-pin-notes {
+  list-style: none;
+  padding: 0;
+  margin: 32px 0 0 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+}
+
+.case-pin-note-item {
+  display: flex;
+  gap: 16px;
+  border-top: 1px solid var(--border-light);
+  padding-top: 20px;
+  cursor: pointer;
+  transition: border-color 0.3s ease;
+}
+
+.case-pin-note-item.is-active,
+.case-pin-note-item:hover {
+  border-color: var(--text-primary);
+}
+
+.case-pin-note-badge {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background-color: var(--text-primary);
+  color: #FFFFFF;
+  font-family: var(--font-family-body);
+  font-size: 12px;
+  font-weight: var(--font-weight-semibold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.case-pin-note-title {
+  font-family: var(--font-family-display);
+  font-size: 18px;
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+  margin: 0 0 6px 0;
+}
+
+.case-pin-note-desc {
+  font-family: var(--font-family-body);
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+/* ── 06. INTERACTION FLOW ───────────────────────────────── */
+.case-flow-step {
+  margin-bottom: 56px;
+}
+
+.case-step-label {
+  font-family: var(--font-family-body);
+  font-size: 12px;
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--text-badge-tracking);
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+
+.case-flow-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: center;
+  margin-top: 48px;
+}
+
+.case-atom-list {
+  list-style: none;
+  padding: 0;
+  margin: 20px 0 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.case-atom-item {
+  font-family: var(--font-family-body);
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+.case-atom-item strong {
+  color: var(--text-primary);
+  font-weight: var(--font-weight-semibold);
+}
+
+/* ── 07. WORKFLOW CHIPS (Warm Tone Badges) ──────────────── */
+.case-chips-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+  margin-bottom: 16px;
+}
+
+.case-chip {
+  background-color: var(--bg-surface-warm);
+  border: 1px solid var(--border-light);
+  color: var(--text-primary);
+  font-family: var(--font-family-body);
+  font-size: 13px;
+  font-weight: var(--font-weight-medium);
+  padding: 6px 14px;
+  border-radius: 9999px;
+}
+
+/* ── 08. EMPTY STATE SECTION (Warm Neutral Frame) ───────── */
+.case-empty-state-frame {
+  display: flex;
+  justify-content: center;
+  background: linear-gradient(135deg, #E6E2D8 0%, #EDEAE2 100%);
+  border-radius: 20px;
+  corner-shape: squircle;
+  -webkit-corner-smoothing: 0.6;
+  padding: 48px;
+  border: 1px solid var(--border-light);
+}
+
+.case-empty-state-frame img {
+  max-width: 560px;
+  border-radius: 12px;
+  box-shadow: 0 20px 48px -20px rgba(23, 23, 26, 0.15);
+}
+
+/* ── 09. IMPACT & FOOTER ────────────────────────────────── */
+.case-footer-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  border-top: 1px solid var(--border-light);
+  padding-top: 36px;
+  margin-top: 60px;
+}
+
+.case-nav-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-family-body);
+  font-size: 15px;
+  font-weight: var(--font-weight-medium);
+  color: var(--text-primary);
+  text-decoration: none;
+  transition: color 0.25s ease, transform 0.25s ease;
+}
+
+.case-nav-btn:hover {
+  color: #000000;
+}
+
+.case-nav-btn-prev:hover {
+  transform: translateX(-4px);
+}
+
+.case-nav-btn-next:hover {
+  transform: translateX(4px);
+}
+
+/* =========================================================================
+   PASSWORD PROTECTION GATE STYLING (Warm Light Canvas Theme)
+   ========================================================================= */
+
+.case-gate-page {
+  background-color: var(--bg-canvas);
+  min-height: 100vh;
+  padding-top: 110px;
+  padding-bottom: 80px;
+  display: flex;
+  flex-direction: column;
+}
+
+.case-gate-container {
+  max-width: 540px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.case-gate-card {
+  background-color: #FFFFFF;
+  border: 1px solid var(--border-light);
+  border-radius: 24px;
+  corner-shape: squircle;
+  -webkit-corner-smoothing: 0.6;
+  padding: 44px 40px;
+  box-shadow: 0 16px 44px -16px rgba(23, 23, 26, 0.08);
+  margin-top: 20px;
+  transition: transform 0.3s ease;
+}
+
+.case-gate-card.shake {
+  animation: gateShake 0.45s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+@keyframes gateShake {
+  10%, 90% { transform: translate3d(-1px, 0, 0); }
+  20%, 80% { transform: translate3d(2px, 0, 0); }
+  30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+  40%, 60% { transform: translate3d(4px, 0, 0); }
+}
+
+.case-gate-icon-badge {
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  background-color: var(--bg-surface-warm);
+  border: 1px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-primary);
+  margin-bottom: 24px;
+}
+
+.case-gate-kicker {
+  font-family: var(--font-family-body);
+  font-size: var(--text-badge-size);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--text-badge-tracking);
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.case-gate-title {
+  font-family: var(--font-family-display);
+  font-size: 28px;
+  font-weight: var(--font-weight-bold);
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  margin: 0 0 12px 0;
+  line-height: 1.2;
+}
+
+.case-gate-desc {
+  font-family: var(--font-family-body);
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  margin: 0 0 28px 0;
+}
+
+.case-gate-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.case-gate-input-wrap {
+  position: relative;
+  width: 100%;
+}
+
+.case-gate-input {
+  width: 100%;
+  height: 52px;
+  padding: 0 48px 0 16px;
+  background-color: var(--bg-canvas);
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  font-family: var(--font-family-body);
+  font-size: 15px;
+  color: var(--text-primary);
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.25s ease, background-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.case-gate-input:focus {
+  background-color: #FFFFFF;
+  border-color: var(--text-primary);
+  box-shadow: 0 0 0 3px rgba(23, 23, 26, 0.08);
+}
+
+.case-gate-input.has-error {
+  border-color: #D32F2F;
+  background-color: #FFF8F8;
+}
+
+.case-gate-toggle-pwd {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  padding: 6px;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease;
+}
+
+.case-gate-toggle-pwd:hover {
+  color: var(--text-primary);
+}
+
+.case-gate-submit-btn {
+  width: 100%;
+  height: 50px;
+  background-color: var(--text-primary);
+  color: #FFFFFF;
+  border: none;
+  border-radius: 9999px;
+  font-family: var(--font-family-body);
+  font-size: 14px;
+  font-weight: var(--font-weight-medium);
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background-color 0.25s ease, transform 0.25s ease;
+}
+
+.case-gate-submit-btn:hover {
+  background-color: #000000;
+  transform: translateY(-1px);
+}
+
+.case-gate-error-msg {
+  font-family: var(--font-family-body);
+  font-size: 13px;
+  color: #D32F2F;
+  margin: -4px 0 0 4px;
+}
+
+.case-gate-hint-box {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.case-gate-hint-text {
+  font-family: var(--font-family-body);
+  font-size: 13px;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.case-gate-hint-code {
+  font-family: var(--font-family-body);
+  font-size: 12px;
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  background-color: var(--bg-surface-warm);
+  border: 1px solid var(--border-light);
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+/* ── RESPONSIVE ADAPTATIONS ─────────────────────────────── */
+@media (max-width: 1024px) {
+  .case-section-head-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .case-meta-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .case-hero-drawer-img {
+    display: none;
+  }
+
+  .case-hero-main-img {
+    width: 100%;
+  }
+
+  .case-flow-split {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+}
+
+@media (max-width: 768px) {
+  .case-study-page,
+  .case-gate-page {
+    padding-top: 80px;
+  }
+
+  .case-section {
+    padding: 56px 0;
+  }
+
+  .case-overview-grid,
+  .case-users-grid,
+  .case-steps-grid,
+  .case-pin-notes {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .case-footer-nav {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .case-gate-card {
+    padding: 32px 24px;
+  }
+}
+
+/* ── CONTINUOUS BEHANCE STREAM FOR ZEVOX ─────────────────── */
+.zevox-flow-stream {
+  width: 100%;
+  margin-top: 36px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border-radius: 20px;
+  corner-shape: squircle;
+  -webkit-corner-smoothing: 0.6;
+  overflow: hidden;
+  box-shadow: 0 24px 64px -20px rgba(23, 23, 26, 0.12);
+  border: 1px solid var(--border-light);
+  background-color: #08080E;
+}
+
+.zevox-flow-slice {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  line-height: 0;
+  font-size: 0;
+  display: block;
+}
+
+.zevox-flow-slice picture,
+.zevox-flow-slice img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+

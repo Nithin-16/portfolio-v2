@@ -17,8 +17,22 @@ dist-ssr
 !.vscode/extensions.json
 .idea
 .DS_Store
+Thumbs.db
+ehthumbs.db
+desktop.ini
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
+*.tmp
+
+# Environment & Local Overrides
+.env
+.env.local
+.env.*.local
+
+# Agentic IDE & system caches
+.gemini
+.agents
+.system_generated

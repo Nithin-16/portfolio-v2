@@ -272,7 +272,7 @@ export default function App() {
         onAnimationEnd={() => setNavInitial(false)}
       >
         <div className="navbar-container">
-          {/* Floating Back to Home button on the left margin (Smooth scroll transition on case studies) */}
+          {/* Floating Back button (iOS-style icon action, anchored inside container with left padding) */}
           {currentView !== 'home' && (
             <button
               type="button"
@@ -281,8 +281,7 @@ export default function App() {
               title="Back to Selected Work"
               aria-label="Back to Selected Work"
             >
-              <ArrowLeft size={16} className="navbar-back-icon" />
-              <span className="navbar-back-label">Back to Home</span>
+              <ArrowLeft size={18} strokeWidth={2.2} className="navbar-back-icon" />
             </button>
           )}
 

@@ -425,7 +425,14 @@ export default function BlazeupCaseStudy({ onBack, onNavigate }) {
                       e.preventDefault();
                       const u = "nithin161298";
                       const d = "gmail.com";
-                      window.location.href = `mailto:${u}@${d}?subject=${encodeURIComponent("Portfolio Review Access Request · Blazeup Compliance")}`;
+                      const email = `${u}@${d}`;
+                      const subject = encodeURIComponent("Portfolio Review Access Request · Blazeup Compliance");
+                      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+                      if (isMobile) {
+                        window.location.href = `mailto:${email}?subject=${subject}`;
+                      } else {
+                        window.open(`https://mail.google.com/mail/?view=cm&fs=1&to=${email}&su=${subject}`, '_blank', 'noopener,noreferrer');
+                      }
                     }}
                     className="case-gate-contact-link"
                     style={{
@@ -574,7 +581,7 @@ export default function BlazeupCaseStudy({ onBack, onNavigate }) {
             </div>
             <div className="case-meta-item">
               <div className="case-meta-label">Timeline</div>
-              <p className="case-meta-value">May 2026 – July 2026</p>
+              <p className="case-meta-value">May 2026 – August 2026</p>
             </div>
             <div className="case-meta-item">
               <div className="case-meta-label">Scope</div>

@@ -28,7 +28,7 @@
 - **Studio Visual Card:** Warm limestone gradient card (`linear-gradient(135deg, #E6E2D8 0%, #EDEAE2 50%, #F5F3ED 100%)`) with squircle corners, soft ambient glow, macro dashboard image (`/case/dashboard.webp`), and scroll-driven parallax drawer (`/case/drawer-obligation.webp`).
 - **Metadata Grid (4 Columns):**
   - **Role:** UI Design Intern
-  - **Timeline:** May 2026 – July 2026
+  - **Timeline:** May 2026 – August 2026
   - **Scope:** IA · UI execution · Design system
   - **Origin:** Terralogic hackathon project
 

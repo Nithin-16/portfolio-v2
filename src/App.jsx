@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import Lenis from 'lenis';
 import 'lenis/dist/lenis.css';
-import { ArrowLeft, ArrowRight, ArrowUpRight, ArrowDown, Mail, Copy, Check, Lock } from 'lucide-react';
+import { ArrowLeft, ArrowRight, ArrowUpRight, ArrowDown, Mail, Copy, Check, Lock, ExternalLink } from 'lucide-react';
 import BlazeupCaseStudy from './BlazeupCaseStudy.jsx';
 import ZevoxCaseStudy from './ZevoxCaseStudy.jsx';
 import './case-study.css';
@@ -14,6 +14,24 @@ export default function App() {
   const lenisRef = useRef(null);
   const isClickScrollingRef = useRef(false);
   const [navInitial, setNavInitial] = useState(true);
+  const [mailMenuOpen, setMailMenuOpen] = useState(false);
+  const mailMenuRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (mailMenuRef.current && !mailMenuRef.current.contains(e.target)) {
+        setMailMenuOpen(false);
+      }
+    };
+    if (mailMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('touchstart', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
+    };
+  }, [mailMenuOpen]);
 
   // Case study hash routing
   const getViewFromHash = () => {
@@ -293,11 +311,25 @@ export default function App() {
     return `${user}@${domain}`;
   };
 
-  const handleSendMail = (e) => {
+  const handleOpenGmail = (e) => {
+    if (e && e.preventDefault) e.preventDefault();
+    const email = getEmailAddress();
+    const subject = encodeURIComponent("Let's build something great");
+    window.open(`https://mail.google.com/mail/?view=cm&fs=1&to=${email}&su=${subject}`, '_blank', 'noopener,noreferrer');
+    setMailMenuOpen(false);
+  };
+
+  const handleOpenDefaultMail = (e) => {
     if (e && e.preventDefault) e.preventDefault();
     const email = getEmailAddress();
     const subject = encodeURIComponent("Let's build something great");
     window.location.href = `mailto:${email}?subject=${subject}`;
+    setMailMenuOpen(false);
+  };
+
+  const handleMailButtonClick = (e) => {
+    if (e && e.preventDefault) e.preventDefault();
+    setMailMenuOpen((prev) => !prev);
   };
 
   const handleCopyEmail = (e) => {
@@ -965,16 +997,51 @@ export default function App() {
 
                 {/* Interactive Mail Action Pill (Masked for privacy & spam protection) */}
                 <div className="contact-email-pill">
-                  <button
-                    type="button"
-                    onClick={handleSendMail}
-                    className="contact-email-link"
-                    aria-label="Send email"
-                  >
-                    <Mail size={16} className="contact-email-icon" />
-                    <span>Mail</span>
-                    <ArrowUpRight size={14} className="contact-mail-arrow" />
-                  </button>
+                  <div className="contact-mail-btn-wrap" ref={mailMenuRef}>
+                    <button
+                      type="button"
+                      onClick={handleMailButtonClick}
+                      className="contact-email-link"
+                      aria-label="Send email"
+                      aria-expanded={mailMenuOpen}
+                    >
+                      <Mail size={16} className="contact-email-icon" />
+                      <span>Mail</span>
+                      <ArrowUpRight size={14} className="contact-mail-arrow" />
+                    </button>
+
+                    {mailMenuOpen && (
+                      <div className="contact-mail-popover" role="menu">
+                        <button
+                          type="button"
+                          className="contact-popover-item"
+                          onClick={handleOpenGmail}
+                        >
+                          <ExternalLink size={15} />
+                          <span>Open in Gmail (Web)</span>
+                        </button>
+                        <button
+                          type="button"
+                          className="contact-popover-item"
+                          onClick={handleOpenDefaultMail}
+                        >
+                          <Mail size={15} />
+                          <span>Default Mail App</span>
+                        </button>
+                        <button
+                          type="button"
+                          className="contact-popover-item"
+                          onClick={(e) => {
+                            handleCopyEmail(e);
+                            setMailMenuOpen(false);
+                          }}
+                        >
+                          {copied ? <Check size={15} /> : <Copy size={15} />}
+                          <span>{copied ? 'Copied to Clipboard' : 'Copy Email Address'}</span>
+                        </button>
+                      </div>
+                    )}
+                  </div>
 
                   <span className="contact-email-sep" />
 

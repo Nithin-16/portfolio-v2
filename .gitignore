@@ -36,3 +36,7 @@ desktop.ini
 .gemini
 .agents
 .system_generated
+
+# Temporary archives and extraction scratch files
+*.zip
+src/*.html

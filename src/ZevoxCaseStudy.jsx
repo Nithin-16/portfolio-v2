@@ -4,10 +4,10 @@ import "./case-study.css";
 
 /**
  * ZevoxCaseStudy Component
- * An open, warm-canvas continuous Behance-style case study presentation
- * for Zevox - A Crypto-Enabled Fintech Wallet.
- * Features the project header and metadata, followed immediately by
- * all 11 high-resolution presentation slices flowing continuously one below another.
+ * Presentation layout:
+ * - Editorial Case Header with 4-item metadata grid (Timeline: February 2026 – March 2026)
+ * - Continuous Behance presentation stream with all 11 slices one below each other
+ * - Thematic dark outcome footer band with 3 key takeaway cards and high-contrast navigation
  */
 export default function ZevoxCaseStudy({ onBack, onNavigate }) {
   const [scrollProgress, setScrollProgress] = useState(0);
@@ -25,13 +25,15 @@ export default function ZevoxCaseStudy({ onBack, onNavigate }) {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // 4-Item Metadata Grid (Featuring February 2026 – March 2026)
   const metadata = [
     { label: "Role", value: "UI / UX Designer & Visual Identity" },
-    { label: "Scope", value: "Mobile App, Design System, Visa Debit Card" },
-    { label: "Product", value: "Zevox, a crypto-enabled fintech wallet" },
-    { label: "Focus", value: "Cross-border payments & remittances" },
+    { label: "Timeline", value: "February 2026 – March 2026" },
+    { label: "Scope", value: "Mobile App · Design System · Visa Debit Card" },
+    { label: "Focus", value: "Cross-Border Remittances & Web3 Wallet" },
   ];
 
+  // All 11 High-Resolution Slices displayed continuously one below each other
   const presentationSlices = [
     {
       id: "cover",
@@ -102,7 +104,7 @@ export default function ZevoxCaseStudy({ onBack, onNavigate }) {
   ];
 
   return (
-    <div className="case-study-page">
+    <div className="case-study-page" style={{ paddingBottom: 0 }}>
       {/* ── Reading Progress Bar ── */}
       <div
         className="case-progress-bar"
@@ -134,14 +136,13 @@ export default function ZevoxCaseStudy({ onBack, onNavigate }) {
         {/* ── 01. CASE HERO ── */}
         <section className="case-hero" style={{ paddingBottom: "24px" }}>
           <div className="case-eyebrow-row">
-            <span className="case-eyebrow-text">02 — Case Study · Cross-Border Fintech</span>
+            <span className="case-eyebrow-text">Case Study 02 · Cross-Border Fintech Platform</span>
             <span className="case-eyebrow-line" />
           </div>
 
           <h1 className="case-hero-title">
-            <span className="case-hero-title-accent">Zevox:</span>
-            <br />
-            Where Payments Move Simply Without Borders
+            <span className="case-hero-title-accent">Zevox: </span>
+            <span className="case-hero-title-subtle">Where Payments Move Simply Without Borders</span>
           </h1>
 
           <p className="case-hero-desc">
@@ -152,11 +153,11 @@ export default function ZevoxCaseStudy({ onBack, onNavigate }) {
 
           <div className="case-award-badge">
             <span className="case-award-dot" />
-            <span>Case Study 02 · Cross-Border Fintech Platform</span>
+            <span>Fintech & Web3 Mobile Wallet · Cross-Border Remittances</span>
           </div>
 
-          {/* Metadata Grid (Focused purely on designer, no collaborators) */}
-          <div className="case-meta-grid" style={{ marginBottom: "32px" }}>
+          {/* 4-Item Metadata Grid */}
+          <div className="case-meta-grid" style={{ marginBottom: "36px" }}>
             {metadata.map((item) => (
               <div key={item.label} className="case-meta-item">
                 <div className="case-meta-label">{item.label}</div>
@@ -182,48 +183,96 @@ export default function ZevoxCaseStudy({ onBack, onNavigate }) {
             </div>
           ))}
         </section>
-
-        {/* ── BOTTOM NAVIGATION ── */}
-        <footer className="case-footer-nav" style={{ marginTop: "64px", paddingBottom: "96px" }}>
-          <button
-            type="button"
-            onClick={() => {
-              if (onNavigate) onNavigate("blazeup");
-              else window.location.hash = "#/case-study/blazeup";
-            }}
-            className="case-nav-btn case-nav-btn-prev"
-          >
-            <ArrowLeft size={16} />
-            <span>← Previous: Blazeup Compliance</span>
-          </button>
-
-          <a
-            href="#work"
-            onClick={(e) => {
-              e.preventDefault();
-              if (onBack) onBack();
-              else window.location.hash = "#work";
-            }}
-            className="case-nav-btn"
-          >
-            <span>Back to Selected Work</span>
-          </a>
-
-          <a
-            href="#contact"
-            onClick={(e) => {
-              e.preventDefault();
-              if (onNavigate) onNavigate("contact");
-              else if (onBack) onBack();
-              else window.location.hash = "#contact";
-            }}
-            className="case-nav-btn case-nav-btn-next"
-          >
-            <span>Let's talk about product design</span>
-            <ArrowRight size={16} />
-          </a>
-        </footer>
       </div>
+
+      {/* ── BOTTOM OUTCOME & FOOTER NAVIGATION BAND (Dark Band Thematics) ── */}
+      <footer className="case-band case-band-dark" style={{ marginTop: "72px", padding: "80px 0 96px" }}>
+        <div className="container">
+          <div className="case-eyebrow-row">
+            <span className="case-eyebrow-text">Outcome & Key Takeaways</span>
+            <span className="case-eyebrow-line" />
+          </div>
+
+          <div className="case-section-head-grid">
+            <h2 className="case-section-title">Where fintech simplicity meets cryptographic velocity.</h2>
+            <p className="case-section-intro">
+              Shipped as a complete product blueprint from brand identity to hardware packaging, Zevox proved that
+              decentralized finance can feel friendly, approachable, and trustworthy.
+            </p>
+          </div>
+
+          {/* 3 Outcome Cards */}
+          <div className="case-impact-cards-grid" style={{ marginTop: "40px" }}>
+            <div className="case-impact-card">
+              <div className="case-impact-num">01 / Invisible rails</div>
+              <h4 className="case-impact-title">Complexity Hidden Behind Familiar Patterns</h4>
+              <p className="case-impact-body">
+                Users don't need to know about gas fees, mempools, or smart contract routing. Abstracting technical
+                intricacies into clear delivery estimates and locked FX rates establishes immediate confidence.
+              </p>
+            </div>
+
+            <div className="case-impact-card">
+              <div className="case-impact-num">02 / Radical transparency</div>
+              <h4 className="case-impact-title">Zero Surprises at Checkout</h4>
+              <p className="case-impact-body">
+                Surfacing the exact fee breakdown, intermediary spread, and guaranteed recipient payout up front directly
+                conquered the primary cause of drop-off in international remittances.
+              </p>
+            </div>
+
+            <div className="case-impact-card">
+              <div className="case-impact-num">03 / Omnichannel cohesion</div>
+              <h4 className="case-impact-title">A Unified Physical & Digital Touchpoint</h4>
+              <p className="case-impact-body">
+                Extending the digital brand vocabulary into the tactile matte-black physical card and unboxing ritual
+                created a high-trust anchor that bridges software and daily life.
+              </p>
+            </div>
+          </div>
+
+          {/* Footer Navigation */}
+          <div className="case-footer-nav">
+            <button
+              type="button"
+              onClick={() => {
+                if (onNavigate) onNavigate("blazeup");
+                else window.location.hash = "#/case-study/blazeup";
+              }}
+              className="case-nav-btn case-nav-btn-prev"
+            >
+              <ArrowLeft size={16} />
+              <span>Previous: Blazeup Compliance</span>
+            </button>
+
+            <a
+              href="#work"
+              onClick={(e) => {
+                e.preventDefault();
+                if (onBack) onBack();
+                else window.location.hash = "#work";
+              }}
+              className="case-nav-btn"
+            >
+              <span>Back to Selected Work</span>
+            </a>
+
+            <a
+              href="#contact"
+              onClick={(e) => {
+                e.preventDefault();
+                if (onNavigate) onNavigate("contact");
+                else if (onBack) onBack();
+                else window.location.hash = "#contact";
+              }}
+              className="case-nav-btn case-nav-btn-next"
+            >
+              <span>Let's talk about product design</span>
+              <ArrowRight size={16} />
+            </a>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

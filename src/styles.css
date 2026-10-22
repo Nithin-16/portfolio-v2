@@ -2786,13 +2786,34 @@ picture {
 .contact-email-link {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   text-decoration: none;
   color: var(--text-inverse);
   font-family: var(--font-family-body);
   font-size: var(--text-body-md-size);
   font-weight: var(--font-weight-medium);
   letter-spacing: -0.01em;
+  background: none;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.2s ease, opacity 0.2s ease;
+}
+
+.contact-email-link:hover {
+  color: var(--text-inverse);
+  opacity: 0.85;
+}
+
+.contact-mail-arrow {
+  color: var(--text-inverse-muted);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), color 0.2s ease;
+}
+
+.contact-email-link:hover .contact-mail-arrow {
+  color: var(--text-inverse);
+  transform: translate(2px, -2px);
 }
 
 .contact-email-icon {
@@ -3219,14 +3240,16 @@ picture {
   }
 
   .contact-email-pill {
-    flex-direction: column;
-    gap: 8px;
-    border-radius: 20px;
-    padding: 14px 18px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    border-radius: var(--radius-pill);
+    padding: 12px 24px;
   }
 
   .contact-email-sep {
-    display: none;
+    display: block;
   }
 
   .contact-footer-container {

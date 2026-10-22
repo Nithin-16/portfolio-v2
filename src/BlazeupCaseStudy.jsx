@@ -1,14 +1,146 @@
 import React, { useEffect, useState, useRef } from "react";
 import { ArrowLeft, ArrowRight, Lock, Unlock, Eye, EyeOff } from "lucide-react";
+import "./case-study.css";
 
 /**
  * BlazeupCaseStudy Component
- * Password-protected case study with Portfolio V2's warm tone design system.
+ * Based on the latest design & structural blueprint (Blazeup_casestudy_221026.html),
+ * fully adapted to Portfolio V2's warm design system, typography, and 12-column grid.
  */
 const VALID_PASSWORDS = ["blazeup", "blazeup2026", "design", "nithin"];
 
+const chapters = [
+  { id: "intro", label: "Intro" },
+  { id: "stakes", label: "Problem" },
+  { id: "process", label: "Process" },
+  { id: "dashboard", label: "Dashboard" },
+  { id: "flow", label: "Flow" },
+  { id: "surfaces", label: "Surfaces" },
+  { id: "edge", label: "Edge cases" },
+  { id: "impact", label: "Outcome" },
+];
+
+/**
+ * Interactive Before / After Image Comparison Slider
+ */
+function DashboardCompareSlider({ before, after }) {
+  const [sliderPos, setSliderPos] = useState(50);
+
+  return (
+    <div className="case-compare-wrap">
+      <div className="case-compare-frame">
+        <picture>
+          <img
+            src={before}
+            alt="Previous compliance dashboard"
+            className="case-compare-img"
+            draggable="false"
+          />
+        </picture>
+        <picture>
+          <img
+            src={after}
+            alt="Redesigned compliance dashboard"
+            className="case-compare-img"
+            style={{ clipPath: `inset(0 ${100 - sliderPos}% 0 0)` }}
+            draggable="false"
+          />
+        </picture>
+
+        <span className="case-compare-badge-after">After</span>
+        <span className="case-compare-badge-before">Before</span>
+
+        <div className="case-compare-divider-line" style={{ left: `${sliderPos}%` }}>
+          <span className="case-compare-handle">⇄</span>
+        </div>
+
+        <input
+          type="range"
+          min="0"
+          max="100"
+          value={sliderPos}
+          onChange={(e) => setSliderPos(Number(e.target.value))}
+          aria-label="Compare the previous and redesigned dashboards"
+          className="case-compare-range-input"
+        />
+      </div>
+      <p className="case-caption">
+        Drag to compare. Both are cropped to the same height; the previous dashboard ran noticeably longer.
+      </p>
+    </div>
+  );
+}
+
+/**
+ * Reusable Screenshot Pin Figure with leader lines and synchronized notes
+ */
+function PinFigure({ src, alt, pins, notesClassName = "case-pin-notes-grid-3", className = "" }) {
+  const [active, setActive] = useState(null);
+
+  return (
+    <div className={`case-pin-figure ${className}`}>
+      <div className="case-pin-container">
+        <picture>
+          <img src={src} alt={alt} className="case-pin-img" draggable="false" loading="lazy" />
+        </picture>
+
+        {pins.map((p, i) =>
+          p.from != null ? (
+            <span
+              key={`leader-${i}`}
+              aria-hidden="true"
+              className="case-pin-leader-line"
+              style={{
+                top: `${p.y}%`,
+                left: `${p.from}%`,
+                width: `${p.x - p.from}%`,
+                opacity: active === null || active === i ? 0.9 : 0.25,
+              }}
+            />
+          ) : null
+        )}
+
+        {pins.map((p, i) => (
+          <button
+            key={i}
+            type="button"
+            aria-label={`${i + 1}. ${p.title}`}
+            onMouseEnter={() => setActive(i)}
+            onMouseLeave={() => setActive(null)}
+            onFocus={() => setActive(i)}
+            onBlur={() => setActive(null)}
+            onClick={() => setActive(active === i ? null : i)}
+            className={`case-pin-btn ${active === i ? "is-active" : ""}`}
+            style={{ left: `${p.x}%`, top: `${p.y}%` }}
+          >
+            {i + 1}
+          </button>
+        ))}
+      </div>
+
+      <ol className={notesClassName}>
+        {pins.map((p, i) => (
+          <li
+            key={i}
+            onMouseEnter={() => setActive(i)}
+            onMouseLeave={() => setActive(null)}
+            onClick={() => setActive(active === i ? null : i)}
+            className={`case-pin-note-item ${active === i ? "is-active" : ""}`}
+          >
+            <span className="case-pin-note-badge">{i + 1}</span>
+            <div>
+              <h4 className="case-pin-note-title">{p.title}</h4>
+              <p className="case-pin-note-desc">{p.text}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  );
+}
+
 export default function BlazeupCaseStudy({ onBack, onNavigate }) {
-  // Password protection state (persisted across page session)
+  // Password protection state
   const [isUnlocked, setIsUnlocked] = useState(() => {
     try {
       return sessionStorage.getItem("blazeup_unlocked") === "true";
@@ -30,7 +162,6 @@ export default function BlazeupCaseStudy({ onBack, onNavigate }) {
     }
   }, [isUnlocked]);
 
-  // Handle password submission
   const handleUnlockSubmit = (e) => {
     e.preventDefault();
     const cleanInput = passwordInput.trim().toLowerCase();
@@ -58,48 +189,142 @@ export default function BlazeupCaseStudy({ onBack, onNavigate }) {
     setErrorMessage("");
   };
 
-  // Reading Progress Bar
+  // Reading Progress Bar & Active Chapter Tracker
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [activeChapter, setActiveChapter] = useState("intro");
+  const [isDarkTheme, setIsDarkTheme] = useState(false);
+  const drawerRef = useRef(null);
 
   useEffect(() => {
     if (!isUnlocked) return;
 
-    const handleScroll = () => {
+    const updateThemeAndScroll = () => {
       const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
       if (totalHeight > 0) {
         setScrollProgress(Math.min(1, Math.max(0, window.scrollY / totalHeight)));
       }
+      // Subtle parallax on the drawer in hero
+      if (drawerRef.current) {
+        drawerRef.current.style.transform = `translateY(${Math.min(window.scrollY, 700) * -0.07}px)`;
+      }
+
+      // Check if floating chapter navigation (centered vertically at 50vh) overlaps any dark section
+      const midY = window.innerHeight / 2;
+      const darkSections = document.querySelectorAll(".case-band-dark");
+      let isOverDark = false;
+      darkSections.forEach((section) => {
+        const rect = section.getBoundingClientRect();
+        if (rect.top <= midY + 120 && rect.bottom >= midY - 120) {
+          isOverDark = true;
+        }
+      });
+      setIsDarkTheme(isOverDark);
     };
-    handleScroll();
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+
+    updateThemeAndScroll();
+    window.addEventListener("scroll", updateThemeAndScroll, { passive: true });
+    window.addEventListener("resize", updateThemeAndScroll, { passive: true });
+
+    // Chapter Intersection Observer
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && entry.target.id) {
+            setActiveChapter(entry.target.id);
+            if (entry.target.classList.contains("case-band-dark")) {
+              setIsDarkTheme(true);
+            }
+          }
+        });
+      },
+      { rootMargin: "-45% 0px -50% 0px" }
+    );
+
+    chapters.forEach(({ id }) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+
+    return () => {
+      window.removeEventListener("scroll", updateThemeAndScroll);
+      window.removeEventListener("resize", updateThemeAndScroll);
+      observer.disconnect();
+    };
   }, [isUnlocked]);
 
-  // Interactive Pins for Macro Layout Section
-  const [activePin, setActivePin] = useState(null);
-
-  const pins = [
+  // Section 03: Client Dashboard Pins
+  const dashboardPins = [
     {
       x: 32.8,
       y: 9.1,
-      title: "Top Metric Cards",
-      text: "Headline numbers sit at the top so status and critical risk metrics are readable before any scrolling.",
+      from: null,
+      title: "Headline numbers first",
+      text: "On track, overdue, due soon, overall health and penalty exposure sit in one row, readable before any scrolling.",
+    },
+    {
+      x: 30,
+      y: 26.5,
+      from: null,
+      title: "Status at a glance",
+      text: "A single donut shows how many obligations are on track.",
+    },
+    {
+      x: 58,
+      y: 26.5,
+      from: null,
+      title: "Where the risk sits",
+      text: "A risk-tier breakdown (High, Medium) shows where the exposure is concentrated.",
     },
     {
       x: 86.8,
       y: 36.8,
-      title: "Upcoming Deadlines",
-      text: "Items carry explicit PENDING and OVERDUE tags so operational urgency is clear without opening nested views.",
+      from: null,
+      title: "Urgency without opening",
+      text: "Upcoming deadlines carry PENDING and OVERDUE tags, so priority is clear at a glance.",
+    },
+    {
+      x: 5.5,
+      y: 67,
+      from: null,
+      title: "Framework health",
+      text: "Per-framework scores show which frameworks need attention first.",
+    },
+    {
+      x: 36.7,
+      y: 67,
+      from: null,
+      title: "Penalties surfaced",
+      text: "Unpaid and Paid tabs keep open penalties in view without leaving the dashboard.",
     },
   ];
 
-  const metadata = [
-    { label: "Role", value: "UI Design Intern" },
-    { label: "Scope", value: "UI execution · IA refinement · Design system integration" },
-    { label: "Product", value: "Blazeup, an intelligent ERP platform" },
-    { label: "Origin", value: "Terralogic hackathon project" },
+  // Section 04: Framework Catalog Card Pins
+  const catalogCardPins = [
+    {
+      x: 93,
+      y: 13.5,
+      from: 41,
+      title: "Who issued it",
+      text: "The issuing body (EU Commission, SEC / PCAOB) makes the jurisdiction clear before anyone adopts.",
+    },
+    {
+      x: 93,
+      y: 29.7,
+      from: 46,
+      title: "What it is, and how big",
+      text: "A type tag (Regulation, Audit framework) and an obligation count (88, 62) show the kind of framework and the workload it adds.",
+    },
+    {
+      x: 93,
+      y: 36.2,
+      from: 46,
+      title: "Adoption state",
+      text: "Adopted frameworks show a green tick, an explicit timestamp (“You adopted v1.3 on 25 May, 2025”) and a disabled button.",
+    },
   ];
 
+  // Section 05: Contextual Workflows Tab Switcher State
+  const [surfaceMode, setSurfaceMode] = useState("drawer");
   const workflowChips = [
     "Basic information",
     "Schedule",
@@ -177,13 +402,31 @@ export default function BlazeupCaseStudy({ onBack, onNavigate }) {
                 </button>
               </form>
 
-              {/* Access Request Note */}
+              {/* Access Request Note (Masked from scrapers) */}
               <div className="case-gate-hint-box">
                 <span className="case-gate-hint-text">
                   For portfolio review access, please contact{" "}
-                  <a href="mailto:nithin161298@gmail.com" className="case-gate-contact-link">
-                    nithin161298@gmail.com
-                  </a>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      const u = "nithin161298";
+                      const d = "gmail.com";
+                      window.location.href = `mailto:${u}@${d}?subject=${encodeURIComponent("Portfolio Review Access Request · Blazeup Compliance")}`;
+                    }}
+                    className="case-gate-contact-link"
+                    style={{
+                      background: "none",
+                      border: "none",
+                      padding: 0,
+                      color: "inherit",
+                      textDecoration: "underline",
+                      cursor: "pointer",
+                      font: "inherit",
+                    }}
+                  >
+                    via Email
+                  </button>
                 </span>
               </div>
             </div>
@@ -196,75 +439,96 @@ export default function BlazeupCaseStudy({ onBack, onNavigate }) {
   // ── UNLOCKED CASE STUDY VIEW ──
   return (
     <div className="case-study-page">
-      {/* ── Reading Progress Bar (Warm Ink Tone) ── */}
+      {/* ── Reading Progress Bar ── */}
       <div
         className="case-progress-bar"
         style={{ transform: `scaleX(${scrollProgress})` }}
         aria-hidden="true"
       />
 
-      <div className="container">
-        {/* ── Top Bar: Back Link + Re-Lock Button ── */}
-        <div className="case-top-bar">
-          <a
-            href="#work"
-            onClick={(e) => {
-              e.preventDefault();
-              if (onBack) onBack();
-              else window.location.hash = "#work";
-            }}
-            className="case-back-link"
-          >
-            <ArrowLeft size={16} className="case-back-arrow" />
-            <span>Back to Selected Work</span>
-          </a>
+      {/* ── Floating Chapter Navigation Sidebar (Desktop Right Rail) ── */}
+      <nav
+        aria-label="Chapters"
+        className={`case-chapters-nav ${
+          isDarkTheme || activeChapter === "stakes" || activeChapter === "impact" ? "is-dark-theme" : ""
+        }`}
+      >
+        {chapters.map(({ id, label }) => {
+          const isActive = activeChapter === id;
+          return (
+            <button
+              key={id}
+              type="button"
+              onClick={() => {
+                const el = document.getElementById(id);
+                if (el) el.scrollIntoView({ behavior: "smooth" });
+              }}
+              className={`case-chapter-link ${isActive ? "is-active" : ""}`}
+              aria-label={`Jump to ${label} chapter`}
+            >
+              <span className="case-chapter-label">{label}</span>
+              <span className="case-chapter-dot" />
+            </button>
+          );
+        })}
+      </nav>
 
-          <button
-            type="button"
-            onClick={handleLock}
-            className="case-lock-status-btn"
-            title="Lock this case study"
-          >
-            <Unlock size={14} />
-            <span>Protected · Click to Lock</span>
-          </button>
-        </div>
+      {/* ── 01. INTRO / HERO SECTION ── */}
+      <section id="intro" className="case-band case-band-canvas case-hero">
+        <div className="container">
+          {/* Top Bar: Back Link + Re-Lock Button */}
+          <div className="case-top-bar">
+            <a
+              href="#work"
+              onClick={(e) => {
+                e.preventDefault();
+                if (onBack) onBack();
+                else window.location.hash = "#work";
+              }}
+              className="case-back-link"
+            >
+              <ArrowLeft size={16} className="case-back-arrow" />
+              <span>Back to Selected Work</span>
+            </a>
 
-        {/* ── 01. CASE HERO ── */}
-        <section className="case-hero">
+            <button
+              type="button"
+              onClick={handleLock}
+              className="case-lock-status-btn"
+              title="Lock this case study"
+            >
+              <Unlock size={14} />
+              <span>Protected · Click to Lock</span>
+            </button>
+          </div>
+
+          {/* Eyebrow */}
           <div className="case-eyebrow-row">
-            <span className="case-eyebrow-text">01 — Case Study · Compliance Module</span>
+            <span className="case-eyebrow-text">Case Study · Compliance Module</span>
             <span className="case-eyebrow-line" />
           </div>
 
+          {/* Primary Two-Tone Headline */}
           <h1 className="case-hero-title">
-            <span className="case-hero-title-accent">Blazeup Compliance:</span>
-            <br />
-            Structuring Enterprise Complexity
+            <span className="case-hero-title-accent">Blazeup Compliance: </span>
+            <span className="case-hero-title-subtle">Structuring Enterprise Complexity</span>
           </h1>
 
+          {/* Lead Copy */}
           <p className="case-hero-desc">
-            Transforming an unrefined hackathon concept into a production-ready compliance module
-            for an award-winning intelligent ERP platform.
+            Turning messy regulatory tracking into a calm, transparent enterprise workflow, from an
+            unrefined hackathon prototype to a module shipped inside an award-winning ERP.
           </p>
 
+          {/* Accolade Badge */}
           <div className="case-award-badge">
             <span className="case-award-dot" />
-            <span>Part of Blazeup: India’s Best Design Project 2026</span>
+            <span>Part of Blazeup · India’s Best Design Project 2026</span>
           </div>
 
-          {/* Metadata Grid */}
-          <div className="case-meta-grid">
-            {metadata.map((item) => (
-              <div key={item.label} className="case-meta-item">
-                <div className="case-meta-label">{item.label}</div>
-                <p className="case-meta-value">{item.value}</p>
-              </div>
-            ))}
-          </div>
-
-          {/* Hero Visual: Overlapping Dashboard & Slide-out Drawer in Warm Limestone Frame */}
+          {/* Visual Showcase Card with Scroll-Driven Parallax Drawer */}
           <div className="case-hero-visual-card">
+            <div className="case-hero-glow" aria-hidden="true" />
             <div className="case-hero-visual-wrap">
               <picture>
                 <source srcSet="/case/dashboard.webp" type="image/webp" />
@@ -279,6 +543,7 @@ export default function BlazeupCaseStudy({ onBack, onNavigate }) {
               <picture>
                 <source srcSet="/case/drawer-obligation.webp" type="image/webp" />
                 <img
+                  ref={drawerRef}
                   src="/case/drawer-obligation.jpg"
                   alt="Create Obligation slide-out drawer"
                   className="case-hero-drawer-img"
@@ -287,402 +552,483 @@ export default function BlazeupCaseStudy({ onBack, onNavigate }) {
               </picture>
             </div>
           </div>
-        </section>
 
-        {/* ── 02. OVERVIEW & ROLE ── */}
-        <section id="case-overview" className="case-section">
-          <div className="case-section-divider" />
-          <div className="case-eyebrow-row">
-            <span className="case-eyebrow-text">02 — Overview &amp; Role</span>
-            <span className="case-eyebrow-line" />
-          </div>
-
-          <div className="case-section-head-grid">
-            <h2 className="case-section-title">
-              One platform for HR, Finance, CRM and Compliance.
-            </h2>
-            <p className="case-section-intro">
-              Blazeup is an intelligent ERP that unifies the core functions of an enterprise in one place.
-            </p>
-          </div>
-
-          <div className="case-overview-grid">
-            <div className="case-overview-card">
-              <div className="case-card-kicker">My Role</div>
-              <p className="case-card-body">
-                UI Design Intern. I owned UI execution, refined the information architecture, and
-                integrated the compliance module seamlessly into the Blazeup core design system.
-              </p>
+          {/* 4-Item Metadata Grid */}
+          <div className="case-meta-grid">
+            <div className="case-meta-item">
+              <div className="case-meta-label">Role</div>
+              <p className="case-meta-value">UI Design Intern</p>
             </div>
-            <div className="case-overview-card">
-              <div className="case-card-kicker">The Constraint</div>
-              <p className="case-card-body">
-                Adhere strictly to the new Blazeup design system, ensuring the compliance module feels
-                like a native, cohesive extension rather than a standalone silo.
-              </p>
+            <div className="case-meta-item">
+              <div className="case-meta-label">Timeline</div>
+              <p className="case-meta-value">May 2026 – July 2026</p>
+            </div>
+            <div className="case-meta-item">
+              <div className="case-meta-label">Scope</div>
+              <p className="case-meta-value">IA · UI execution · Design system</p>
+            </div>
+            <div className="case-meta-item">
+              <div className="case-meta-label">Origin</div>
+              <p className="case-meta-value">Terralogic hackathon project</p>
             </div>
           </div>
-        </section>
-      </div>
-
-      {/* ── 03. CHALLENGE & USERS (Warm Surface Section) ── */}
-      <section id="case-challenge" className="case-section case-section-tinted">
-        <div className="container">
-          <div className="case-eyebrow-row">
-            <span className="case-eyebrow-text">03 — Challenge &amp; Users</span>
-            <span className="case-eyebrow-line" />
-          </div>
-
-          <div className="case-section-head-grid">
-            <h2 className="case-section-title">
-              A hackathon idea with no clear hierarchy.
-            </h2>
-            <p className="case-section-intro">
-              The module originated as an internal Terralogic hackathon prototype. While functional under the hood,
-              it lacked visual hierarchy and structural clarity for production users.
-            </p>
-          </div>
-
-          <div className="case-users-grid">
-            <div className="case-user-card">
-              <div className="case-user-num">01 / ADMIN PERSONA</div>
-              <h3 className="case-user-role">System Admin</h3>
-              <p className="case-card-body">
-                Needs a dense, actionable macro view of everything in flight, plus full administrative controls to
-                configure complex legal frameworks, assign deadlines, and track obligations.
-              </p>
-            </div>
-            <div className="case-user-card">
-              <div className="case-user-num">02 / END-USER PERSONA</div>
-              <h3 className="case-user-role">Department User</h3>
-              <p className="case-card-body">
-                Needs a low-friction, focused view of the tasks specifically pending for their team, with clear filing
-                guidance and zero extraneous administrative noise.
-              </p>
-            </div>
-          </div>
-
-          <p className="case-card-body" style={{ maxWidth: "720px", color: "var(--text-secondary)" }}>
-            This case study details the <strong>Admin experience</strong>, where enterprise complexity and information
-            architecture challenges were greatest.
-          </p>
         </div>
       </section>
 
-      <div className="container">
-        {/* ── 04. UX AUDITING ── */}
-        <section id="case-audit" className="case-section">
-          <div className="case-section-divider" />
+      {/* ── 02. STAKES / THE PROBLEM (Dark Section) ── */}
+      <section id="stakes" className="case-band case-band-dark">
+        <div className="container">
           <div className="case-eyebrow-row">
-            <span className="case-eyebrow-text">04 — UX Auditing</span>
+            <span className="case-eyebrow-text">01 / The problem</span>
+            <span className="case-eyebrow-line" />
+          </div>
+
+          <div className="case-section-head-grid">
+            <h2 className="case-section-title">
+              Compliance is an enterprise’s legal shield. The prototype had the logic, but not the hierarchy.
+            </h2>
+            <p className="case-section-intro">
+              Blazeup began as an internal Terralogic hackathon project. The calculations worked, but
+              hundreds of statutory obligations were visually chaotic, easy to misread and hard to triage.
+            </p>
+          </div>
+
+          {/* Status Metric Pills */}
+          <div className="case-pills-row">
+            <span className="case-pill-dark">
+              <span className="case-pill-dot" />
+              Millions in regulatory exposure
+            </span>
+            <span className="case-pill-dark">
+              <span className="case-pill-dot" />
+              Multi-jurisdiction mandates
+            </span>
+            <span className="case-pill-dark">
+              <span className="case-pill-dot" />
+              Zero margin for a late filing
+            </span>
+          </div>
+
+          {/* Persona Comparison Cards */}
+          <div className="case-personas-grid">
+            <div className="case-persona-card-dark">
+              <div className="case-persona-kicker">01 / Admin side</div>
+              <h3 className="case-persona-title">System Admin</h3>
+              <p className="case-persona-body">
+                Internal specialists who maintain the frameworks, the catalog and the obligations every client relies on.
+              </p>
+              <div className="case-persona-coverage-tag">
+                <span className="case-persona-coverage-dot" />
+                <span>Covered in 04 · Interaction flow</span>
+              </div>
+            </div>
+
+            <div className="case-persona-card-dark">
+              <div className="case-persona-kicker">02 / Client side</div>
+              <h3 className="case-persona-title">Client User</h3>
+              <p className="case-persona-body">
+                Corporate compliance officers who need high-level awareness of their own active obligations, deadlines and penalties.
+              </p>
+              <div className="case-persona-coverage-tag">
+                <span className="case-persona-coverage-dot" />
+                <span>Covered in 03 · Client dashboard</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── 03. PROCESS (Canvas Tone) ── */}
+      <section id="process" className="case-band case-band-canvas">
+        <div className="container">
+          <div className="case-eyebrow-row">
+            <span className="case-eyebrow-text">02 / Process</span>
             <span className="case-eyebrow-line" />
           </div>
 
           <div className="case-section-head-grid">
             <h2 className="case-section-title">Structure first, pixels second.</h2>
             <p className="case-section-intro">
-              Bridging the gap between an engineering prototype and a production-ready enterprise product through systematic UX auditing.
+              With no documentation and no product manager to ask, I used AI as an auditing partner to question
+              flows and surface edge cases, and locked the information architecture before opening Figma.
             </p>
           </div>
 
-          <div className="case-steps-grid">
-            <div className="case-step-card">
-              <span className="case-step-num">01</span>
-              <h3 className="case-step-title">Reality</h3>
-              <p className="case-card-body">
-                No formal PRD documentation and no dedicated product manager to define baseline requirements.
-              </p>
+          {/* 5-Step Process Timeline */}
+          <div className="case-timeline-grid">
+            <div className="case-timeline-track" aria-hidden="true" />
+
+            <div className="case-timeline-item">
+              <div className="case-timeline-node" />
+              <div className="case-timeline-step-num">01</div>
+              <h4 className="case-timeline-step-title">Hackathon prototype</h4>
+              <p className="case-timeline-step-desc">Working logic, no hierarchy.</p>
             </div>
-            <div className="case-step-card">
-              <span className="case-step-num">02</span>
-              <h3 className="case-step-title">Process</h3>
-              <p className="case-card-body">
-                I partnered with Gemini and Claude as UX auditing sounding boards to question flows, surface hidden edge cases, and test edge paths.
-              </p>
+
+            <div className="case-timeline-item">
+              <div className="case-timeline-node" />
+              <div className="case-timeline-step-num">02</div>
+              <h4 className="case-timeline-step-title">UX audit</h4>
+              <p className="case-timeline-step-desc">No PRD, no PM. Gemini and Claude as sounding boards.</p>
             </div>
-            <div className="case-step-card">
-              <span className="case-step-num">03</span>
-              <h3 className="case-step-title">Execution</h3>
-              <p className="case-card-body">
-                I locked the core information architecture and entity relationships before designing high-fidelity screens in Figma.
-              </p>
+
+            <div className="case-timeline-item">
+              <div className="case-timeline-node" />
+              <div className="case-timeline-step-num">03</div>
+              <h4 className="case-timeline-step-title">IA locked</h4>
+              <p className="case-timeline-step-desc">Structure and entity relationships agreed first.</p>
+            </div>
+
+            <div className="case-timeline-item">
+              <div className="case-timeline-node" />
+              <div className="case-timeline-step-num">04</div>
+              <h4 className="case-timeline-step-title">UI in Figma</h4>
+              <p className="case-timeline-step-desc">Built on the Blazeup design system.</p>
+            </div>
+
+            <div className="case-timeline-item">
+              <div className="case-timeline-node is-complete" />
+              <div className="case-timeline-step-num">05</div>
+              <h4 className="case-timeline-step-title">Shipped</h4>
+              <p className="case-timeline-step-desc">Integrated into the core platform.</p>
             </div>
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* ── 05. MACRO LAYOUT & PIN FIGURE (Ink Pins) ── */}
-        <section id="case-dashboard" className="case-section">
-          <div className="case-section-divider" />
+      {/* ── 04. MACRO LAYOUT · CLIENT SIDE (Warm Tinted Band) ── */}
+      <section id="dashboard" className="case-band case-band-warm">
+        <div className="container">
           <div className="case-eyebrow-row">
-            <span className="case-eyebrow-text">05 — Macro Layout</span>
+            <span className="case-eyebrow-text">03 / Macro layout · Client side</span>
             <span className="case-eyebrow-line" />
           </div>
 
           <div className="case-section-head-grid">
-            <h2 className="case-section-title">The Admin Dashboard.</h2>
+            <h2 className="case-section-title">The client dashboard: what needs attention right now?</h2>
             <p className="case-section-intro">
-              A high-density compliance cockpit designed to answer <em>“what needs attention right now?”</em> at a single glance.
+              This is the view for the client tracking their own compliance, not the admin side where frameworks
+              and obligations are set up.
             </p>
           </div>
 
-          <div className="case-pin-figure">
-            <div className="case-pin-container">
-              <picture>
-                <source srcSet="/case/dashboard.webp" type="image/webp" />
-                <img
-                  src="/case/dashboard.jpg"
-                  alt="Blazeup Compliance interactive dashboard view"
-                  className="case-pin-img"
-                  loading="lazy"
-                />
-              </picture>
-
-              {pins.map((p, i) => (
-                <button
-                  key={i}
-                  type="button"
-                  className={`case-pin-btn ${activePin === i ? "is-active" : ""}`}
-                  style={{ left: `${p.x}%`, top: `${p.y}%` }}
-                  onMouseEnter={() => setActivePin(i)}
-                  onMouseLeave={() => setActivePin(null)}
-                  onClick={() => setActivePin(activePin === i ? null : i)}
-                  aria-label={`Highlight feature ${i + 1}: ${p.title}`}
-                >
-                  {i + 1}
-                </button>
-              ))}
-            </div>
-
-            {/* Pin Notes List */}
-            <ol className="case-pin-notes">
-              {pins.map((p, i) => (
-                <li
-                  key={i}
-                  className={`case-pin-note-item ${activePin === i ? "is-active" : ""}`}
-                  onMouseEnter={() => setActivePin(i)}
-                  onMouseLeave={() => setActivePin(null)}
-                >
-                  <span className="case-pin-note-badge">{i + 1}</span>
-                  <div>
-                    <h3 className="case-pin-note-title">{p.title}</h3>
-                    <p className="case-pin-note-desc">{p.text}</p>
-                  </div>
-                </li>
-              ))}
-            </ol>
+          {/* Subheading: Inside the Dashboard */}
+          <div className="case-sub-header-block">
+            <div className="case-sub-kicker">Inside the dashboard</div>
+            <h3 className="case-sub-title">Dense compliance data, readable at a glance.</h3>
           </div>
-        </section>
-      </div>
 
-      {/* ── 06. INTERACTION FLOW (Warm Surface Section) ── */}
-      <section id="case-flow" className="case-section case-section-tinted">
+          {/* Interactive Before/After Comparison Slider */}
+          <DashboardCompareSlider
+            before="/case/dashboard-before.jpg"
+            after="/case/dashboard.jpg"
+          />
+
+          {/* 4 Dashboard Consolidation / Improvement Cards */}
+          <div className="case-consolidation-grid">
+            <div className="case-consolidation-item">
+              <h4 className="case-consolidation-title">Fewer stacked panels</h4>
+              <p className="case-consolidation-desc">
+                The long run of separate cards, including an empty Penalty Exposure panel, is consolidated so the key content fits higher on the page.
+              </p>
+            </div>
+            <div className="case-consolidation-item">
+              <h4 className="case-consolidation-title">Health you can read</h4>
+              <p className="case-consolidation-desc">
+                Framework health moved from a row of mostly N/A gauges to a ranked list of scores.
+              </p>
+            </div>
+            <div className="case-consolidation-item">
+              <h4 className="case-consolidation-title">Urgency is explicit</h4>
+              <p className="case-consolidation-desc">
+                Deadlines now carry PENDING and OVERDUE tags, with overdue rows picked out in red.
+              </p>
+            </div>
+            <div className="case-consolidation-item">
+              <h4 className="case-consolidation-title">Actions where they belong</h4>
+              <p className="case-consolidation-desc">
+                Rows of bright orange buttons became a quiet Quick Links list, so the page leads with data rather than calls to action.
+              </p>
+            </div>
+          </div>
+
+          {/* Client Dashboard 6-Pin Interactive Figure */}
+          <PinFigure
+            src="/case/dashboard.webp"
+            alt="Client compliance dashboard"
+            pins={dashboardPins}
+            notesClassName="case-pin-notes-grid-3"
+          />
+        </div>
+      </section>
+
+      {/* ── 05. INTERACTION FLOW · ADMIN SIDE (Canvas Tone) ── */}
+      <section id="flow" className="case-band case-band-canvas">
         <div className="container">
           <div className="case-eyebrow-row">
-            <span className="case-eyebrow-text">06 — Interaction Flow</span>
+            <span className="case-eyebrow-text">04 / Interaction flow · Admin side</span>
             <span className="case-eyebrow-line" />
           </div>
 
           <div className="case-section-head-grid">
             <h2 className="case-section-title">Keeping users in context.</h2>
             <p className="case-section-intro">
-              Slide-out drawers let admins inspect, configure, and adopt legal frameworks without losing their position in the data table.
+              Admins needed to manage active frameworks and also browse and adopt new ones, without losing their place in the system.
             </p>
           </div>
 
-          {/* Step 1: Management Table */}
-          <div className="case-flow-step">
-            <div className="case-step-label">Step 1 · Management Table</div>
-            <div className="case-frame">
-              <picture>
-                <source srcSet="/case/frameworks.webp" type="image/webp" />
-                <img src="/case/frameworks.jpg" alt="Frameworks management table" loading="lazy" />
-              </picture>
+          {/* 3 Step Overview Cards */}
+          <div className="case-admin-flow-cards">
+            <div className="case-admin-flow-card">
+              <div className="case-admin-flow-num">01</div>
+              <h4 className="case-admin-flow-title">Manage in the table</h4>
+              <p className="case-admin-flow-desc">Admins work from the frameworks table.</p>
             </div>
-            <div className="case-caption">The primary frameworks table with sortable columns, risk badges, and quick actions.</div>
+            <div className="case-admin-flow-card">
+              <div className="case-admin-flow-num">02</div>
+              <h4 className="case-admin-flow-title">Click Browse Catalog</h4>
+              <p className="case-admin-flow-desc">The catalog drawer opens over the table, so the table never disappears.</p>
+            </div>
+            <div className="case-admin-flow-card">
+              <div className="case-admin-flow-num">03</div>
+              <h4 className="case-admin-flow-title">Inspect, then adopt</h4>
+              <p className="case-admin-flow-desc">Each framework can be read and adopted without leaving the page.</p>
+            </div>
           </div>
 
-          {/* Step 2: Browse Catalog Drawer */}
-          <div className="case-flow-step">
-            <div className="case-step-label">Step 2 · Browse Catalog Drawer</div>
-            <div className="case-frame">
-              <picture>
-                <source srcSet="/case/catalog.webp" type="image/webp" />
-                <img src="/case/catalog.jpg" alt="Browse Framework Catalog drawer overlaid on table" loading="lazy" />
-              </picture>
-            </div>
-            <div className="case-caption">Overlay drawer slides in from the right, maintaining background context.</div>
+          {/* Main Catalog Drawer Frame */}
+          <div className="case-frame">
+            <picture>
+              <source srcSet="/case/catalog.webp" type="image/webp" />
+              <img
+                src="/case/catalog.jpg"
+                alt="Browse Framework Catalog drawer open over the frameworks table"
+                loading="lazy"
+              />
+            </picture>
           </div>
 
-          {/* Step 2 Detail: Proposed Card vs Atomic Breakdown */}
-          <div className="case-flow-split">
-            <div>
+          {/* Subheading: Inside the Drawer */}
+          <div className="case-sub-header-block">
+            <div className="case-sub-kicker">Inside the drawer</div>
+            <h3 className="case-sub-title">Making each framework readable before you adopt it.</h3>
+          </div>
+
+          {/* Side-by-side Before/After Catalog Card Comparison */}
+          <div className="case-catalog-split-grid">
+            {/* Before (Left: 4 Cols) */}
+            <div className="case-catalog-before-col">
+              <div className="case-catalog-state-label">Before</div>
               <div className="case-frame">
-                <picture>
-                  <source srcSet="/case/catalog-card.webp" type="image/webp" />
-                  <img src="/case/catalog-card.jpg" alt="Framework Catalog Card close-up" loading="lazy" />
-                </picture>
-              </div>
-              <div className="case-caption">The proposed Framework Catalog Card design.</div>
-            </div>
-
-            <div>
-              <h3 className="case-step-title" style={{ fontSize: "22px", marginBottom: "16px" }}>
-                A Card Built from Existing System Atoms
-              </h3>
-              <ul className="case-atom-list">
-                <li className="case-atom-item">
-                  <strong>Obligation counts:</strong> Explicitly communicate the workload overhead before adoption.
-                </li>
-                <li className="case-atom-item">
-                  <strong>Framework badges:</strong> Categorical tags (Tax, Labor, ESG) enable quick scanning.
-                </li>
-                <li className="case-atom-item">
-                  <strong>Adoption states:</strong> Clear timestamped status with disabled state once incorporated.
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          {/* Step 3: Create Framework & Earlier Iteration */}
-          <div className="case-flow-split" style={{ marginTop: "56px" }}>
-            <div>
-              <div className="case-step-label">Step 3 · Create Framework</div>
-              <div className="case-frame">
-                <picture>
-                  <source srcSet="/case/create-framework.webp" type="image/webp" />
-                  <img src="/case/create-framework.jpg" alt="Create Framework slide-out drawer" loading="lazy" />
-                </picture>
-              </div>
-              <div className="case-caption">Custom framework authoring flow directly inside drawer.</div>
-            </div>
-
-            <div>
-              <div className="case-step-label">Design Evolution</div>
-              <div className="case-frame" style={{ maxWidth: "340px" }}>
                 <picture>
                   <source srcSet="/case/catalog-early.webp" type="image/webp" />
-                  <img src="/case/catalog-early.jpg" alt="Earlier iteration of the catalog drawer" loading="lazy" />
+                  <img src="/case/catalog-early.jpg" alt="Earlier catalog drawer" loading="lazy" />
                 </picture>
               </div>
-              <div className="case-caption">Earlier iteration before IA refinement and hierarchy audit.</div>
+              <p className="case-caption" style={{ marginTop: "16px" }}>
+                Just a name, a version and a short description. Nothing about who issued it, what kind of framework it is, how big it is, or whether and when it was adopted.
+              </p>
+              <p className="case-catalog-critique-tag">✕ Unclear jurisdiction · No type · No adoption info</p>
+            </div>
+
+            {/* After (Right: 8 Cols) */}
+            <div>
+              <div className="case-catalog-state-label" style={{ color: "var(--text-primary)" }}>After</div>
+              <PinFigure
+                src="/case/catalog-card.webp"
+                alt="Framework catalog cards with issuer, type, obligation count and adoption state"
+                pins={catalogCardPins}
+                notesClassName="case-pin-notes-grid-1"
+              />
+            </div>
+          </div>
+
+          {/* Reused Drawer Pattern Grid */}
+          <div className="case-drawer-reused-grid">
+            <div>
+              <h3 className="case-workflow-info-title">One drawer pattern, reused</h3>
+              <p className="case-workflow-info-desc">
+                Creating a custom framework uses the same slide-out pattern, so adopting and authoring feel like one system.
+              </p>
+            </div>
+            <div className="case-frame">
+              <picture>
+                <source srcSet="/case/create-framework.webp" type="image/webp" />
+                <img src="/case/create-framework.jpg" alt="Create Framework drawer" loading="lazy" />
+              </picture>
             </div>
           </div>
         </div>
       </section>
 
-      <div className="container">
-        {/* ── 07. CONTEXTUAL WORKFLOWS ── */}
-        <section id="case-workflows" className="case-section">
-          <div className="case-section-divider" />
+      {/* ── 06. CONTEXTUAL WORKFLOWS (Warm Tinted Band) ── */}
+      <section id="surfaces" className="case-band case-band-warm">
+        <div className="container">
           <div className="case-eyebrow-row">
-            <span className="case-eyebrow-text">07 — Contextual Workflows</span>
+            <span className="case-eyebrow-text">05 / Contextual workflows</span>
             <span className="case-eyebrow-line" />
           </div>
 
           <div className="case-section-head-grid">
             <h2 className="case-section-title">Match the surface to the cognitive load.</h2>
             <p className="case-section-intro">
-              Deciding when to keep users in a drawer versus dedicating a focused full-page experience.
+              Deciding when to keep users inside a lightweight drawer versus dedicating a focused full-page experience.
             </p>
           </div>
 
-          <div className="case-flow-split">
-            {/* Full page deep work */}
+          {/* Interactive Pill Mode Switcher */}
+          <div className="case-tabs-pill-row" role="tablist">
+            <button
+              type="button"
+              role="tab"
+              aria-selected={surfaceMode === "drawer"}
+              onClick={() => setSurfaceMode("drawer")}
+              className={`case-tab-btn ${surfaceMode === "drawer" ? "is-active" : ""}`}
+            >
+              Quick add · Drawer
+            </button>
+            <button
+              type="button"
+              role="tab"
+              aria-selected={surfaceMode === "page"}
+              onClick={() => setSurfaceMode("page")}
+              className={`case-tab-btn ${surfaceMode === "page" ? "is-active" : ""}`}
+            >
+              Deep work · Full page
+            </button>
+          </div>
+
+          {/* Split Content View */}
+          <div className="case-workflows-split">
+            {/* Description & Chips */}
             <div>
-              <div className="case-step-label">Deep Work · Dedicated Full Page</div>
-              <div className="case-frame" style={{ maxHeight: "440px", overflow: "hidden" }}>
-                <picture>
-                  <source srcSet="/case/obligation-page.webp" type="image/webp" />
-                  <img src="/case/obligation-page.jpg" alt="Create Obligation comprehensive full page form" loading="lazy" />
-                </picture>
-              </div>
-              <div className="case-chips-wrap">
-                {workflowChips.map((chip) => (
-                  <span key={chip} className="case-chip">
-                    {chip}
-                  </span>
-                ))}
-              </div>
-              <p className="case-card-body">
-                ESG mapping, statutory penalty structures, and filing schedules require deep focus, so they receive a full-page canvas.
-              </p>
+              {surfaceMode === "drawer" ? (
+                <div>
+                  <h3 className="case-workflow-info-title">Stay in the list</h3>
+                  <p className="case-workflow-info-desc">
+                    Lightweight obligation additions stay inside a slide-out drawer so the master table
+                    remains visible and anchored behind it.
+                  </p>
+                </div>
+              ) : (
+                <div>
+                  <h3 className="case-workflow-info-title">Give heavy work a canvas</h3>
+                  <p className="case-workflow-info-desc">
+                    ESG mapping, penalty structures, and filing schedules need focus, so they get a dedicated full page.
+                    Scroll inside the frame to explore it.
+                  </p>
+                  <div className="case-chips-wrap">
+                    {workflowChips.map((chip) => (
+                      <span key={chip} className="case-chip">
+                        {chip}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
 
-            {/* Quick additions drawer */}
-            <div>
-              <div className="case-step-label">Quick Additions · Drawer</div>
-              <div className="case-frame">
+            {/* Scrollable Mockup Frame */}
+            <div className="case-workflow-scroll-frame">
+              {surfaceMode === "drawer" ? (
                 <picture>
                   <source srcSet="/case/obligation-drawer.webp" type="image/webp" />
-                  <img src="/case/obligation-drawer.jpg" alt="Obligation list with lightweight drawer" loading="lazy" />
+                  <img
+                    src="/case/obligation-drawer.jpg"
+                    alt="Create Obligation drawer"
+                    loading="lazy"
+                  />
                 </picture>
-              </div>
-              <div className="case-caption" style={{ marginTop: "16px" }}>
-                Lightweight obligation additions stay inside a slide-out drawer so the parent table remains anchored and visible.
-              </div>
+              ) : (
+                <picture>
+                  <source srcSet="/case/obligation-page.webp" type="image/webp" />
+                  <img
+                    src="/case/obligation-page.jpg"
+                    alt="Create Obligation full page"
+                    loading="lazy"
+                  />
+                </picture>
+              )}
             </div>
-          </div>
-        </section>
-      </div>
-
-      {/* ── 08. EDGE CASES (Warm Surface Section) ── */}
-      <section id="case-edge" className="case-section case-section-tinted">
-        <div className="container">
-          <div className="case-eyebrow-row">
-            <span className="case-eyebrow-text">08 — Edge Cases</span>
-            <span className="case-eyebrow-line" />
-          </div>
-
-          <div className="case-section-head-grid">
-            <h2 className="case-section-title">Empty states that guide first action.</h2>
-            <p className="case-section-intro">
-              An empty state shouldn't be a dead end—it should clearly communicate context and prompt the primary onboarding action.
-            </p>
-          </div>
-
-          <div className="case-empty-state-frame">
-            <picture>
-              <source srcSet="/case/empty-state.webp" type="image/webp" />
-              <img src="/case/empty-state.jpg" alt="No active frameworks empty state" loading="lazy" />
-            </picture>
           </div>
         </div>
       </section>
 
-      <div className="container">
-        {/* ── 09. IMPACT & REFLECTIONS ── */}
-        <section id="case-impact" className="case-section">
-          <div className="case-section-divider" />
+      {/* ── 07. EDGE CASES (Canvas Tone) ── */}
+      <section id="edge" className="case-band case-band-canvas">
+        <div className="container">
           <div className="case-eyebrow-row">
-            <span className="case-eyebrow-text">09 — Impact</span>
+            <span className="case-eyebrow-text">06 / Edge cases</span>
             <span className="case-eyebrow-line" />
           </div>
 
           <div className="case-section-head-grid">
-            <h2 className="case-section-title">Integrated into the main Blazeup platform.</h2>
+            <h2 className="case-section-title">An empty state should never be a dead end.</h2>
             <p className="case-section-intro">
-              The refined information architecture and modernized UI shipped into the production ERP core.
+              When no frameworks are adopted, the screen says what it is and prompts the first action: adopt a framework.
             </p>
           </div>
 
-          <div className="case-overview-grid">
-            <div className="case-overview-card">
-              <div className="case-card-kicker">AI as a UX Partner</div>
-              <h3 className="case-step-title" style={{ marginTop: "8px" }}>Auditing Logic</h3>
-              <p className="case-card-body">
-                Using LLMs as active critique partners helped surface ambiguous user states and challenge mental models before drawing a single pixel.
+          {/* Elevated Empty State Card */}
+          <div className="case-edge-showcase">
+            <div className="case-edge-inner-card">
+              <picture>
+                <source srcSet="/case/empty-state.webp" type="image/webp" />
+                <img
+                  src="/case/empty-state.jpg"
+                  alt="No active frameworks empty state"
+                  loading="lazy"
+                />
+              </picture>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── 08. IMPACT & OUTCOME (Dark Section) ── */}
+      <section id="impact" className="case-band case-band-dark">
+        <div className="container">
+          <div className="case-eyebrow-row">
+            <span className="case-eyebrow-text">07 / Outcome</span>
+            <span className="case-eyebrow-line" />
+          </div>
+
+          <div className="case-section-head-grid">
+            <h2 className="case-section-title">Shipped into the Blazeup core platform.</h2>
+            <p className="case-section-intro">
+              The refined information architecture and modernised UI were integrated into the production ERP.
+              This project laid the foundation for my ongoing product design work at Lollypop and Swantech.
+            </p>
+          </div>
+
+          {/* 3 Outcome Cards */}
+          <div className="case-impact-cards-grid">
+            <div className="case-impact-card">
+              <div className="case-impact-num">01 / AI as a UX partner</div>
+              <h4 className="case-impact-title">Auditing Logic</h4>
+              <p className="case-impact-body">
+                Using LLMs as critique partners surfaced ambiguous states and challenged my mental model before I drew a pixel.
               </p>
             </div>
-            <div className="case-overview-card">
-              <div className="case-card-kicker">Design System Discipline</div>
-              <h3 className="case-step-title" style={{ marginTop: "8px" }}>Cohesion at Scale</h3>
-              <p className="case-card-body">
-                Relying strictly on existing components and tokens ensured the module felt like an innate part of the broader ERP ecosystem.
+
+            <div className="case-impact-card">
+              <div className="case-impact-num">02 / Design system discipline</div>
+              <h4 className="case-impact-title">Cohesion at Scale</h4>
+              <p className="case-impact-body">
+                Sticking to existing components and tokens made the module feel native to the wider ERP.
+              </p>
+            </div>
+
+            <div className="case-impact-card">
+              <div className="case-impact-num">03 / Graphic design is a superpower</div>
+              <h4 className="case-impact-title">Clarity in Complexity</h4>
+              <p className="case-impact-body">
+                My visual background shaped the type hierarchy and layout system for dense data. B2B software doesn’t have to look boring.
               </p>
             </div>
           </div>
 
-          {/* Bottom Navigation */}
+          {/* Footer Navigation */}
           <div className="case-footer-nav">
             <a
               href="#work"
@@ -700,7 +1046,7 @@ export default function BlazeupCaseStudy({ onBack, onNavigate }) {
             <button
               type="button"
               onClick={() => {
-                if (onNavigate) onNavigate('zevox');
+                if (onNavigate) onNavigate("zevox");
                 else window.location.hash = "#/case-study/zevox";
               }}
               className="case-nav-btn case-nav-btn-next"
@@ -709,8 +1055,8 @@ export default function BlazeupCaseStudy({ onBack, onNavigate }) {
               <ArrowRight size={16} />
             </button>
           </div>
-        </section>
-      </div>
+        </div>
+      </section>
     </div>
   );
 }

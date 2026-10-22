@@ -257,8 +257,24 @@ export default function App() {
     }
   };
 
-  const handleCopyEmail = () => {
-    navigator.clipboard.writeText('nithin161298@gmail.com');
+  // Obfuscated email generator to prevent automated bot scrapers
+  const getEmailAddress = () => {
+    const user = 'nithin161298';
+    const domain = 'gmail.com';
+    return `${user}@${domain}`;
+  };
+
+  const handleSendMail = (e) => {
+    if (e && e.preventDefault) e.preventDefault();
+    const email = getEmailAddress();
+    const subject = encodeURIComponent("Let's build something great");
+    window.location.href = `mailto:${email}?subject=${subject}`;
+  };
+
+  const handleCopyEmail = (e) => {
+    if (e && e.preventDefault) e.preventDefault();
+    const email = getEmailAddress();
+    navigator.clipboard.writeText(email);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -918,16 +934,18 @@ export default function App() {
                   I’m always open to conversations about product design, collaborations, or just a good design chat.
                 </p>
 
-                {/* Interactive Email Pill */}
+                {/* Interactive Mail Action Pill (Masked for privacy & spam protection) */}
                 <div className="contact-email-pill">
-                  <a
-                    href="mailto:nithin161298@gmail.com"
+                  <button
+                    type="button"
+                    onClick={handleSendMail}
                     className="contact-email-link"
-                    aria-label="Send email to nithin161298@gmail.com"
+                    aria-label="Send email"
                   >
                     <Mail size={16} className="contact-email-icon" />
-                    <span>nithin161298@gmail.com</span>
-                  </a>
+                    <span>Mail</span>
+                    <ArrowUpRight size={14} className="contact-mail-arrow" />
+                  </button>
 
                   <span className="contact-email-sep" />
 
@@ -937,8 +955,8 @@ export default function App() {
                     className="contact-copy-btn"
                     aria-label="Copy email address"
                   >
-                    <span>{copied ? 'Copied!' : 'Copy'}</span>
                     {copied ? <Check size={14} className="copy-icon-active" /> : <Copy size={14} />}
+                    <span>{copied ? 'Copied!' : 'Copy'}</span>
                   </button>
                 </div>
               </div>

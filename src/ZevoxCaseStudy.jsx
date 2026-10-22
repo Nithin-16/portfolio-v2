@@ -12,6 +12,19 @@ import "./case-study.css";
 export default function ZevoxCaseStudy({ onBack, onNavigate }) {
   const [scrollProgress, setScrollProgress] = useState(0);
 
+  // Always start at top of case study on mount
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "instant" });
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+    const t = setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: "instant" });
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+    }, 40);
+    return () => clearTimeout(t);
+  }, []);
+
   // Reading progress tracker (ink tone matching Blazeup)
   useEffect(() => {
     const handleScroll = () => {

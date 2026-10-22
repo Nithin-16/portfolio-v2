@@ -25,28 +25,57 @@ export default function App() {
 
   const [currentView, setCurrentView] = useState(getViewFromHash);
 
+  // Robust scroll-to-top helper that coordinates native window and Lenis smooth scroller
+  const resetScrollToTop = () => {
+    if (lenisRef.current) {
+      try {
+        lenisRef.current.scrollTo(0, { immediate: true });
+      } catch (e) {}
+    }
+    window.scrollTo({ top: 0, behavior: 'instant' });
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+  };
+
   useEffect(() => {
     const handleHash = () => {
       const targetView = getViewFromHash();
       setCurrentView(targetView);
       if (targetView !== 'home') {
-        window.scrollTo({ top: 0, behavior: 'instant' });
+        resetScrollToTop();
+        setTimeout(resetScrollToTop, 20);
+        setTimeout(resetScrollToTop, 100);
       }
     };
     window.addEventListener('hashchange', handleHash);
     return () => window.removeEventListener('hashchange', handleHash);
   }, []);
 
+  // Ensure scroll is reset whenever navigating to any case study
+  useEffect(() => {
+    if (currentView !== 'home') {
+      resetScrollToTop();
+      const t1 = setTimeout(resetScrollToTop, 20);
+      const t2 = setTimeout(resetScrollToTop, 100);
+      return () => {
+        clearTimeout(t1);
+        clearTimeout(t2);
+      };
+    }
+  }, [currentView]);
+
   const navigateToBlazeup = () => {
+    resetScrollToTop();
     window.location.hash = '#/case-study/blazeup';
     setCurrentView('blazeup');
-    window.scrollTo({ top: 0, behavior: 'instant' });
+    setTimeout(resetScrollToTop, 20);
   };
 
   const navigateToZevox = () => {
+    resetScrollToTop();
     window.location.hash = '#/case-study/zevox';
     setCurrentView('zevox');
-    window.scrollTo({ top: 0, behavior: 'instant' });
+    setTimeout(resetScrollToTop, 20);
   };
 
   const navigateToHome = (targetId = 'work') => {

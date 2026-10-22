@@ -195,6 +195,19 @@ export default function BlazeupCaseStudy({ onBack, onNavigate }) {
   const [isDarkTheme, setIsDarkTheme] = useState(false);
   const drawerRef = useRef(null);
 
+  // Always start at top of case study on mount
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "instant" });
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+    const t = setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: "instant" });
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+    }, 40);
+    return () => clearTimeout(t);
+  }, []);
+
   useEffect(() => {
     if (!isUnlocked) return;
 

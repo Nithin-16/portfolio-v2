@@ -21,57 +21,6 @@ const chapters = [
 ];
 
 /**
- * Interactive Before / After Image Comparison Slider
- */
-function DashboardCompareSlider({ before, after }) {
-  const [sliderPos, setSliderPos] = useState(50);
-
-  return (
-    <div className="case-compare-wrap">
-      <div className="case-compare-frame">
-        <picture>
-          <img
-            src={before}
-            alt="Previous compliance dashboard"
-            className="case-compare-img"
-            draggable="false"
-          />
-        </picture>
-        <picture>
-          <img
-            src={after}
-            alt="Redesigned compliance dashboard"
-            className="case-compare-img"
-            style={{ clipPath: `inset(0 ${100 - sliderPos}% 0 0)` }}
-            draggable="false"
-          />
-        </picture>
-
-        <span className="case-compare-badge-after">After</span>
-        <span className="case-compare-badge-before">Before</span>
-
-        <div className="case-compare-divider-line" style={{ left: `${sliderPos}%` }}>
-          <span className="case-compare-handle">⇄</span>
-        </div>
-
-        <input
-          type="range"
-          min="0"
-          max="100"
-          value={sliderPos}
-          onChange={(e) => setSliderPos(Number(e.target.value))}
-          aria-label="Compare the previous and redesigned dashboards"
-          className="case-compare-range-input"
-        />
-      </div>
-      <p className="case-caption">
-        Drag to compare. Both are cropped to the same height; the previous dashboard ran noticeably longer.
-      </p>
-    </div>
-  );
-}
-
-/**
  * Reusable Screenshot Pin Figure with leader lines and synchronized notes
  */
 function PinFigure({ src, alt, pins, notesClassName = "case-pin-notes-grid-3", className = "" }) {
@@ -135,6 +84,109 @@ function PinFigure({ src, alt, pins, notesClassName = "case-pin-notes-grid-3", c
           </li>
         ))}
       </ol>
+    </div>
+  );
+}
+
+/**
+ * Reusable Before & After badges
+ */
+function BeforeTag() {
+  return <span className="case-tag-before">Before</span>;
+}
+
+function AfterTag() {
+  return (
+    <span className="case-tag-after">
+      <span className="case-tag-after-dot" />
+      After
+    </span>
+  );
+}
+
+/**
+ * Reusable Up-Close Comparison Row for deep-dive changes
+ */
+function UpcloseChange({ n, title, line, b, bw, a, aw, altB, altA }) {
+  return (
+    <div className="case-upclose-row">
+      <div className="case-upclose-meta">
+        <span className="case-upclose-num">0{n}</span>
+        <h4 className="case-upclose-title">{title}</h4>
+        <p className="case-upclose-desc">{line}</p>
+      </div>
+      <div
+        className="case-upclose-compare-grid"
+        style={{
+          "--cols": bw && aw ? `${bw}fr ${aw}fr` : "1fr 1fr",
+        }}
+      >
+        <div className="min-w-0">
+          <BeforeTag />
+          <div className="case-frame" style={{ marginTop: "12px" }}>
+            <img src={b} alt={altB || `${title}, before`} className="case-img-responsive" draggable="false" loading="lazy" />
+          </div>
+        </div>
+        <div className="min-w-0">
+          <AfterTag />
+          <div className="case-frame" style={{ marginTop: "12px" }}>
+            <img src={a} alt={altA || `${title}, after`} className="case-img-responsive" draggable="false" loading="lazy" />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Actions Merge Flow Comparison Row
+ */
+function ActionsMergeChange() {
+  return (
+    <div className="case-upclose-row">
+      <div className="case-upclose-meta">
+        <span className="case-upclose-num">01</span>
+        <h4 className="case-upclose-title">Actions</h4>
+        <p className="case-upclose-desc">
+          The page title with its subtext, the orange header buttons and the Quick Actions bar sat outside the design system. I merged them into one Quick Links list.
+        </p>
+      </div>
+      <div>
+        <BeforeTag />
+        <div className="case-frame" style={{ marginTop: "12px", backgroundColor: "#F9FAFB", padding: "clamp(10px, 1.5vw, 20px)" }}>
+          <img
+            src="/case/dc-b1a.jpg"
+            alt="Old dashboard header with title, subtext and orange buttons"
+            className="case-img-responsive"
+            draggable="false"
+            loading="lazy"
+          />
+        </div>
+        <div className="case-frame" style={{ marginTop: "12px" }}>
+          <img
+            src="/case/dc-b1b.jpg"
+            alt="Old Quick Actions bar with orange buttons"
+            className="case-img-responsive"
+            draggable="false"
+            loading="lazy"
+          />
+        </div>
+        <div className="case-merge-divider">
+          <span className="case-merge-line" />
+          <span className="case-merge-label">Merged into ↓</span>
+          <span className="case-merge-line" />
+        </div>
+        <AfterTag />
+        <div className="case-frame" style={{ marginTop: "12px", maxWidth: "440px" }}>
+          <img
+            src="/case/dc-a1.jpg"
+            alt="Quick Links list"
+            className="case-img-responsive"
+            draggable="false"
+            loading="lazy"
+          />
+        </div>
+      </div>
     </div>
   );
 }
@@ -265,79 +317,8 @@ export default function BlazeupCaseStudy({ onBack, onNavigate }) {
     };
   }, [isUnlocked]);
 
-  // Section 03: Client Dashboard Pins
-  const dashboardPins = [
-    {
-      x: 32.8,
-      y: 9.1,
-      from: null,
-      title: "Headline numbers first",
-      text: "On track, overdue, due soon, overall health and penalty exposure sit in one row, readable before any scrolling.",
-    },
-    {
-      x: 30,
-      y: 26.5,
-      from: null,
-      title: "Status at a glance",
-      text: "A single donut shows how many obligations are on track.",
-    },
-    {
-      x: 58,
-      y: 26.5,
-      from: null,
-      title: "Where the risk sits",
-      text: "A risk-tier breakdown (High, Medium) shows where the exposure is concentrated.",
-    },
-    {
-      x: 86.8,
-      y: 36.8,
-      from: null,
-      title: "Urgency without opening",
-      text: "Upcoming deadlines carry PENDING and OVERDUE tags, so priority is clear at a glance.",
-    },
-    {
-      x: 5.5,
-      y: 67,
-      from: null,
-      title: "Framework health",
-      text: "Per-framework scores show which frameworks need attention first.",
-    },
-    {
-      x: 36.7,
-      y: 67,
-      from: null,
-      title: "Penalties surfaced",
-      text: "Unpaid and Paid tabs keep open penalties in view without leaving the dashboard.",
-    },
-  ];
-
-  // Section 04: Framework Catalog Card Pins
-  const catalogCardPins = [
-    {
-      x: 93,
-      y: 13.5,
-      from: 41,
-      title: "Who issued it",
-      text: "The issuing body (EU Commission, SEC / PCAOB) makes the jurisdiction clear before anyone adopts.",
-    },
-    {
-      x: 93,
-      y: 29.7,
-      from: 46,
-      title: "What it is, and how big",
-      text: "A type tag (Regulation, Audit framework) and an obligation count (88, 62) show the kind of framework and the workload it adds.",
-    },
-    {
-      x: 93,
-      y: 36.2,
-      from: 46,
-      title: "Adoption state",
-      text: "Adopted frameworks show a green tick, an explicit timestamp (“You adopted v1.3 on 25 May, 2025”) and a disabled button.",
-    },
-  ];
-
-  // Section 05: Contextual Workflows Tab Switcher State
-  const [surfaceMode, setSurfaceMode] = useState("drawer");
+  // Section 05 View State
+  const [surfaceMode, setSurfaceMode] = useState("compare");
   const workflowChips = [
     "Basic information",
     "Schedule",
@@ -738,47 +719,59 @@ export default function BlazeupCaseStudy({ onBack, onNavigate }) {
             <h3 className="case-sub-title">Dense compliance data, readable at a glance.</h3>
           </div>
 
-          {/* Interactive Before/After Comparison Slider */}
-          <DashboardCompareSlider
-            before="/case/dashboard-before.jpg"
-            after="/case/dashboard.jpg"
-          />
-
-          {/* 4 Dashboard Consolidation / Improvement Cards */}
-          <div className="case-consolidation-grid">
-            <div className="case-consolidation-item">
-              <h4 className="case-consolidation-title">Fewer stacked panels</h4>
-              <p className="case-consolidation-desc">
-                The long run of separate cards, including an empty Penalty Exposure panel, is consolidated so the key content fits higher on the page.
-              </p>
+          {/* Macro Side-by-Side Comparison */}
+          <div className="case-macro-split-grid">
+            <div>
+              <BeforeTag />
+              <div className="case-frame" style={{ marginTop: "12px" }}>
+                <img
+                  src="/case/dashboard-before.jpg"
+                  alt="Previous compliance dashboard"
+                  className="case-img-responsive"
+                  draggable="false"
+                />
+              </div>
             </div>
-            <div className="case-consolidation-item">
-              <h4 className="case-consolidation-title">Health you can read</h4>
-              <p className="case-consolidation-desc">
-                Framework health moved from a row of mostly N/A gauges to a ranked list of scores.
-              </p>
-            </div>
-            <div className="case-consolidation-item">
-              <h4 className="case-consolidation-title">Urgency is explicit</h4>
-              <p className="case-consolidation-desc">
-                Deadlines now carry PENDING and OVERDUE tags, with overdue rows picked out in red.
-              </p>
-            </div>
-            <div className="case-consolidation-item">
-              <h4 className="case-consolidation-title">Actions where they belong</h4>
-              <p className="case-consolidation-desc">
-                Rows of bright orange buttons became a quiet Quick Links list, so the page leads with data rather than calls to action.
-              </p>
+            <div>
+              <AfterTag />
+              <div className="case-frame" style={{ marginTop: "12px" }}>
+                <img
+                  src="/case/dashboard.jpg"
+                  alt="Redesigned compliance dashboard"
+                  className="case-img-responsive"
+                  draggable="false"
+                />
+              </div>
             </div>
           </div>
 
-          {/* Client Dashboard 6-Pin Interactive Figure */}
-          <PinFigure
-            src="/case/dashboard.webp"
-            alt="Client compliance dashboard"
-            pins={dashboardPins}
-            notesClassName="case-pin-notes-grid-3"
-          />
+          {/* Three changes, up close */}
+          <div className="case-upclose-section">
+            <p className="case-upclose-kicker">Three changes, up close</p>
+            <ActionsMergeChange />
+            <UpcloseChange
+              n={2}
+              title="Framework health"
+              line="A row of mostly N/A gauges became ranked scores."
+              b="/case/dc-b2.jpg"
+              bw={818}
+              a="/case/dc-a2.jpg"
+              aw={430}
+              altB="Old framework health gauge widgets with N/A scores"
+              altA="Redesigned ranked framework scores"
+            />
+            <UpcloseChange
+              n={3}
+              title="Deadlines"
+              line="Every item read PENDING. Now overdue ones stand out in red."
+              b="/case/dc-b3.jpg"
+              bw={428}
+              a="/case/dc-a3.jpg"
+              aw={522}
+              altB="Old deadlines table with identical PENDING tags"
+              altA="Redesigned deadlines with explicit red OVERDUE tags"
+            />
+          </div>
         </div>
       </section>
 
@@ -829,38 +822,73 @@ export default function BlazeupCaseStudy({ onBack, onNavigate }) {
           </div>
 
           {/* Subheading: Inside the Drawer */}
-          <div className="case-sub-header-block">
+          <div className="case-sub-header-block" style={{ marginTop: "clamp(56px, 7vw, 96px)" }}>
             <div className="case-sub-kicker">Inside the drawer</div>
             <h3 className="case-sub-title">Making each framework readable before you adopt it.</h3>
           </div>
 
-          {/* Side-by-side Before/After Catalog Card Comparison */}
-          <div className="case-catalog-split-grid">
-            {/* Before (Left: 4 Cols) */}
-            <div className="case-catalog-before-col">
-              <div className="case-catalog-state-label">Before</div>
-              <div className="case-frame">
-                <picture>
-                  <source srcSet="/case/catalog-early.webp" type="image/webp" />
-                  <img src="/case/catalog-early.jpg" alt="Earlier catalog drawer" loading="lazy" />
-                </picture>
-              </div>
-              <p className="case-caption" style={{ marginTop: "16px" }}>
-                Just a name, a version and a short description. Nothing about who issued it, what kind of framework it is, how big it is, or whether and when it was adopted.
-              </p>
-              <p className="case-catalog-critique-tag">✕ Unclear jurisdiction · No type · No adoption info</p>
-            </div>
-
-            {/* After (Right: 8 Cols) */}
+          {/* Macro Catalog Card Comparison: Side-by-side */}
+          <div className="case-macro-split-grid">
             <div>
-              <div className="case-catalog-state-label" style={{ color: "var(--text-primary)" }}>After</div>
-              <PinFigure
-                src="/case/catalog-card.webp"
-                alt="Framework catalog cards with issuer, type, obligation count and adoption state"
-                pins={catalogCardPins}
-                notesClassName="case-pin-notes-grid-1"
-              />
+              <BeforeTag />
+              <div className="case-frame" style={{ marginTop: "12px" }}>
+                <img
+                  src="/case/ce-b0.jpg"
+                  alt="Catalog card before"
+                  className="case-img-responsive"
+                  draggable="false"
+                />
+              </div>
             </div>
+            <div>
+              <AfterTag />
+              <div className="case-frame" style={{ marginTop: "12px" }}>
+                <img
+                  src="/case/ce-a0.jpg"
+                  alt="Catalog card after"
+                  className="case-img-responsive"
+                  draggable="false"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Three changes, up close */}
+          <div className="case-upclose-section">
+            <p className="case-upclose-kicker">Three changes, up close</p>
+            <UpcloseChange
+              n={1}
+              title="Who issued it"
+              line="The issuing body (EU Commission, SEC / PCAOB) makes the jurisdiction clear."
+              b="/case/ce-b1.jpg"
+              bw={472}
+              a="/case/ce-a1.jpg"
+              aw={472}
+              altB="Old card with missing issuing body and jurisdiction"
+              altA="Redesigned card with clear issuing body badge"
+            />
+            <UpcloseChange
+              n={2}
+              title="What it is, how big"
+              line="A type tag and an obligation count show the kind of framework and the workload it adds."
+              b="/case/ce-b2.jpg"
+              bw={472}
+              a="/case/ce-a2.jpg"
+              aw={472}
+              altB="Old card without type tag or obligation count"
+              altA="Redesigned card displaying regulation type and obligation count"
+            />
+            <UpcloseChange
+              n={3}
+              title="Adoption state"
+              line="A green tick and a timestamp replace a bare disabled button."
+              b="/case/ce-b3.jpg"
+              bw={472}
+              a="/case/ce-a3.jpg"
+              aw={472}
+              altB="Old card with generic disabled button"
+              altA="Redesigned card with green adoption checkmark and explicit timestamp"
+            />
           </div>
 
           {/* Reused Drawer Pattern Grid */}
@@ -897,7 +925,16 @@ export default function BlazeupCaseStudy({ onBack, onNavigate }) {
           </div>
 
           {/* Interactive Pill Mode Switcher */}
-          <div className="case-tabs-pill-row" role="tablist">
+          <div className="case-tabs-pill-row" role="tablist" aria-label="Workflow surface switcher">
+            <button
+              type="button"
+              role="tab"
+              aria-selected={surfaceMode === "compare"}
+              onClick={() => setSurfaceMode("compare")}
+              className={`case-tab-btn ${surfaceMode === "compare" ? "is-active" : ""}`}
+            >
+              Side by Side
+            </button>
             <button
               type="button"
               role="tab"
@@ -918,58 +955,65 @@ export default function BlazeupCaseStudy({ onBack, onNavigate }) {
             </button>
           </div>
 
-          {/* Split Content View */}
-          <div className="case-workflows-split">
-            {/* Description & Chips */}
-            <div>
-              {surfaceMode === "drawer" ? (
-                <div>
-                  <h3 className="case-workflow-info-title">Stay in the list</h3>
-                  <p className="case-workflow-info-desc">
-                    Lightweight obligation additions stay inside a slide-out drawer so the master table
-                    remains visible and anchored behind it.
-                  </p>
+          {/* Panels Grid */}
+          <div className={`case-surface-panels-grid ${surfaceMode !== "compare" ? "is-single-panel" : ""}`}>
+            {(surfaceMode === "compare" || surfaceMode === "drawer") && (
+              <div className="case-surface-panel">
+                <span className="case-surface-panel-kicker">Quick add · Drawer</span>
+                <h3 className="case-surface-panel-title">Stay in the list</h3>
+                <p className="case-surface-panel-desc">
+                  Lightweight additions open in a slide-out drawer, so the master table stays visible behind it.
+                </p>
+                <div className="case-surface-pills-row">
+                  <span className="case-surface-pill">List stays visible</span>
+                  <span className="case-surface-pill">Lightweight form</span>
                 </div>
-              ) : (
-                <div>
-                  <h3 className="case-workflow-info-title">Give heavy work a canvas</h3>
-                  <p className="case-workflow-info-desc">
-                    ESG mapping, penalty structures, and filing schedules need focus, so they get a dedicated full page.
-                    Scroll inside the frame to explore it.
-                  </p>
-                  <div className="case-chips-wrap">
-                    {workflowChips.map((chip) => (
-                      <span key={chip} className="case-chip">
-                        {chip}
-                      </span>
-                    ))}
-                  </div>
+                <div className="case-surface-preview-frame">
+                  <picture>
+                    <source srcSet="/case/obligation-drawer.webp" type="image/webp" />
+                    <img
+                      src="/case/obligation-drawer.jpg"
+                      alt="Create Obligation drawer"
+                      className="case-surface-preview-img is-cover"
+                      draggable="false"
+                      loading="lazy"
+                    />
+                  </picture>
                 </div>
-              )}
-            </div>
+              </div>
+            )}
 
-            {/* Scrollable Mockup Frame */}
-            <div className="case-workflow-scroll-frame">
-              {surfaceMode === "drawer" ? (
-                <picture>
-                  <source srcSet="/case/obligation-drawer.webp" type="image/webp" />
-                  <img
-                    src="/case/obligation-drawer.jpg"
-                    alt="Create Obligation drawer"
-                    loading="lazy"
-                  />
-                </picture>
-              ) : (
-                <picture>
-                  <source srcSet="/case/obligation-page.webp" type="image/webp" />
-                  <img
-                    src="/case/obligation-page.jpg"
-                    alt="Create Obligation full page"
-                    loading="lazy"
-                  />
-                </picture>
-              )}
-            </div>
+            {(surfaceMode === "compare" || surfaceMode === "page") && (
+              <div className="case-surface-panel">
+                <span className="case-surface-panel-kicker">Deep work · Full page</span>
+                <h3 className="case-surface-panel-title">Give heavy work a canvas</h3>
+                <p className="case-surface-panel-desc">
+                  ESG mapping, penalty structures and filing schedules get a dedicated page. Scroll inside the frame to explore.
+                </p>
+                <div className="case-surface-pills-row">
+                  {workflowChips.map((chip) => (
+                    <span key={chip} className="case-surface-pill">
+                      {chip}
+                    </span>
+                  ))}
+                </div>
+                <div className="case-surface-preview-frame is-scrollable">
+                  <picture>
+                    <source srcSet="/case/obligation-page.webp" type="image/webp" />
+                    <img
+                      src="/case/obligation-page.jpg"
+                      alt="Create Obligation full page"
+                      className="case-surface-preview-img is-natural"
+                      draggable="false"
+                      loading="lazy"
+                    />
+                  </picture>
+                </div>
+                <p className="case-caption" style={{ marginTop: "10px" }}>
+                  Scroll inside the frame for the full form.
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </section>

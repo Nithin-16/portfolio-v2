@@ -61,12 +61,6 @@ export default function ZevoxCaseStudy({ onBack, onNavigate }) {
       alt: "Zevox Project Overview — Global Payments Without Borders",
     },
     {
-      id: "branding",
-      webp: "/case/zevox/03-branding-intro.webp",
-      jpg: "/case/zevox/03-branding-intro.jpg",
-      alt: "Zevox Brand Experience on Mobile Device",
-    },
-    {
       id: "timeline",
       webp: "/case/zevox/04-timeline.webp",
       jpg: "/case/zevox/04-timeline.jpg",
@@ -101,6 +95,12 @@ export default function ZevoxCaseStudy({ onBack, onNavigate }) {
       webp: "/case/zevox/09-mockups.webp",
       jpg: "/case/zevox/09-mockups.jpg",
       alt: "Application Mockups & Isometric Device Views",
+    },
+    {
+      id: "branding",
+      webp: "/case/zevox/03-branding-intro.webp",
+      jpg: "/case/zevox/03-branding-intro.jpg",
+      alt: "Zevox Brand Experience — Outdoor Billboard & Social Media Presence",
     },
     {
       id: "card",

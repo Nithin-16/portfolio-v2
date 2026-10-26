@@ -995,65 +995,51 @@ export default function App() {
                   I’m always open to conversations about product design, collaborations, or just a good design chat.
                 </p>
 
-                {/* Interactive Mail Action Pill (Masked for privacy & spam protection) */}
-                <div className="contact-email-pill">
-                  <div className="contact-mail-btn-wrap" ref={mailMenuRef}>
-                    <button
-                      type="button"
-                      onClick={handleMailButtonClick}
-                      className="contact-email-link"
-                      aria-label="Send email"
-                      aria-expanded={mailMenuOpen}
-                    >
-                      <Mail size={16} className="contact-email-icon" />
-                      <span>Mail</span>
-                      <ArrowUpRight size={14} className="contact-mail-arrow" />
-                    </button>
-
-                    {mailMenuOpen && (
-                      <div className="contact-mail-popover" role="menu">
-                        <button
-                          type="button"
-                          className="contact-popover-item"
-                          onClick={handleOpenGmail}
-                        >
-                          <ExternalLink size={15} />
-                          <span>Open in Gmail (Web)</span>
-                        </button>
-                        <button
-                          type="button"
-                          className="contact-popover-item"
-                          onClick={handleOpenDefaultMail}
-                        >
-                          <Mail size={15} />
-                          <span>Default Mail App</span>
-                        </button>
-                        <button
-                          type="button"
-                          className="contact-popover-item"
-                          onClick={(e) => {
-                            handleCopyEmail(e);
-                            setMailMenuOpen(false);
-                          }}
-                        >
-                          {copied ? <Check size={15} /> : <Copy size={15} />}
-                          <span>{copied ? 'Copied to Clipboard' : 'Copy Email Address'}</span>
-                        </button>
-                      </div>
-                    )}
-                  </div>
-
-                  <span className="contact-email-sep" />
-
+                {/* Interactive Mail Action Pill */}
+                <div className="contact-mail-btn-wrap" ref={mailMenuRef}>
                   <button
                     type="button"
-                    onClick={handleCopyEmail}
-                    className="contact-copy-btn"
-                    aria-label="Copy email address"
+                    onClick={handleMailButtonClick}
+                    className="contact-email-pill"
+                    aria-label="Send email"
+                    aria-expanded={mailMenuOpen}
                   >
-                    {copied ? <Check size={14} className="copy-icon-active" /> : <Copy size={14} />}
-                    <span>{copied ? 'Copied!' : 'Copy'}</span>
+                    <Mail size={16} className="contact-email-icon" />
+                    <span>Mail</span>
+                    <ArrowUpRight size={14} className="contact-mail-arrow" />
                   </button>
+
+                  {mailMenuOpen && (
+                    <div className="contact-mail-popover" role="menu">
+                      <button
+                        type="button"
+                        className="contact-popover-item"
+                        onClick={handleOpenGmail}
+                      >
+                        <ExternalLink size={15} />
+                        <span>Open in Gmail (Web)</span>
+                      </button>
+                      <button
+                        type="button"
+                        className="contact-popover-item"
+                        onClick={handleOpenDefaultMail}
+                      >
+                        <Mail size={15} />
+                        <span>Default Mail App</span>
+                      </button>
+                      <button
+                        type="button"
+                        className="contact-popover-item"
+                        onClick={(e) => {
+                          handleCopyEmail(e);
+                          setMailMenuOpen(false);
+                        }}
+                      >
+                        {copied ? <Check size={15} /> : <Copy size={15} />}
+                        <span>{copied ? 'Copied to Clipboard' : 'Copy Email Address'}</span>
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
 

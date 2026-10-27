@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import Lenis from 'lenis';
 import 'lenis/dist/lenis.css';
-import { ArrowLeft, ArrowRight, ArrowUpRight, ArrowDown, Mail, Copy, Check, Lock, ExternalLink } from 'lucide-react';
+import { ArrowLeft, ArrowRight, ArrowUpRight, ArrowDown, Mail, Copy, Check, ExternalLink } from 'lucide-react';
 import BlazeupCaseStudy from './BlazeupCaseStudy.jsx';
 import ZevoxCaseStudy from './ZevoxCaseStudy.jsx';
 import './case-study.css';
@@ -559,10 +559,6 @@ export default function App() {
                   <div className="work-block-meta">
                     <span className="work-block-num">01 / 02</span>
                     <span className="work-block-cat">FINTECH &amp; B2B SAAS</span>
-                    <span className="work-block-badge-protected">
-                      <Lock size={11} strokeWidth={2.2} />
-                      <span>Protected</span>
-                    </span>
                   </div>
                   <div className="work-block-main">
                     <div className="work-block-text">

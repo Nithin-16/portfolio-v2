@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { ArrowLeft, ArrowRight, Lock, Unlock, Eye, EyeOff } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import "./case-study.css";
 
 /**
@@ -7,7 +7,6 @@ import "./case-study.css";
  * Based on the latest design & structural blueprint (Blazeup_casestudy_221026.html),
  * fully adapted to Portfolio V2's warm design system, typography, and 12-column grid.
  */
-const VALID_PASSWORDS = ["blazeup", "blazeup2026", "design", "nithin"];
 
 const chapters = [
   { id: "intro", label: "Intro" },
@@ -192,55 +191,6 @@ function ActionsMergeChange() {
 }
 
 export default function BlazeupCaseStudy({ onBack, onNavigate }) {
-  // Password protection state
-  const [isUnlocked, setIsUnlocked] = useState(() => {
-    try {
-      return sessionStorage.getItem("blazeup_unlocked") === "true";
-    } catch (e) {
-      return false;
-    }
-  });
-
-  const [passwordInput, setPasswordInput] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
-  const [isShaking, setIsShaking] = useState(false);
-  const inputRef = useRef(null);
-
-  // Focus password input on mount if locked
-  useEffect(() => {
-    if (!isUnlocked && inputRef.current) {
-      inputRef.current.focus();
-    }
-  }, [isUnlocked]);
-
-  const handleUnlockSubmit = (e) => {
-    e.preventDefault();
-    const cleanInput = passwordInput.trim().toLowerCase();
-
-    if (VALID_PASSWORDS.includes(cleanInput)) {
-      try {
-        sessionStorage.setItem("blazeup_unlocked", "true");
-      } catch (err) {}
-      setIsUnlocked(true);
-      setErrorMessage("");
-      window.scrollTo({ top: 0, behavior: "instant" });
-    } else {
-      setIsShaking(true);
-      setErrorMessage("Incorrect password. Please try again or request access.");
-      setTimeout(() => setIsShaking(false), 500);
-    }
-  };
-
-  const handleLock = () => {
-    try {
-      sessionStorage.removeItem("blazeup_unlocked");
-    } catch (err) {}
-    setIsUnlocked(false);
-    setPasswordInput("");
-    setErrorMessage("");
-  };
-
   // Reading Progress Bar & Active Chapter Tracker
   const [scrollProgress, setScrollProgress] = useState(0);
   const [activeChapter, setActiveChapter] = useState("intro");
@@ -261,8 +211,6 @@ export default function BlazeupCaseStudy({ onBack, onNavigate }) {
   }, []);
 
   useEffect(() => {
-    if (!isUnlocked) return;
-
     const updateThemeAndScroll = () => {
       const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
       if (totalHeight > 0) {
@@ -315,7 +263,7 @@ export default function BlazeupCaseStudy({ onBack, onNavigate }) {
       window.removeEventListener("resize", updateThemeAndScroll);
       observer.disconnect();
     };
-  }, [isUnlocked]);
+  }, []);
 
   // Section 05 View State
   const [surfaceMode, setSurfaceMode] = useState("compare");
@@ -329,115 +277,6 @@ export default function BlazeupCaseStudy({ onBack, onNavigate }) {
     "Alert template",
   ];
 
-  // ── PASSWORD GATE VIEW ──
-  if (!isUnlocked) {
-    return (
-      <div className="case-gate-page">
-        <div className="container">
-          <div className="case-gate-container">
-            {/* Back link */}
-            <a
-              href="#work"
-              onClick={(e) => {
-                e.preventDefault();
-                if (onBack) onBack();
-                else window.location.hash = "#work";
-              }}
-              className="case-back-link"
-            >
-              <ArrowLeft size={16} className="case-back-arrow" />
-              <span>Back to Selected Work</span>
-            </a>
-
-            {/* Lock Card */}
-            <div className={`case-gate-card ${isShaking ? "shake" : ""}`}>
-              <div className="case-gate-icon-badge">
-                <Lock size={24} strokeWidth={1.8} />
-              </div>
-
-              <div className="case-gate-kicker">01 — Confidential Case Study</div>
-              <h1 className="case-gate-title">Blazeup Compliance</h1>
-              <p className="case-gate-desc">
-                This project contains proprietary enterprise workflows and research under client
-                confidentiality agreements. Please enter the password to view the full case study.
-              </p>
-
-              <form onSubmit={handleUnlockSubmit} className="case-gate-form">
-                <div className="case-gate-input-wrap">
-                  <input
-                    ref={inputRef}
-                    type={showPassword ? "text" : "password"}
-                    value={passwordInput}
-                    onChange={(e) => {
-                      setPasswordInput(e.target.value);
-                      if (errorMessage) setErrorMessage("");
-                    }}
-                    placeholder="Enter password"
-                    className={`case-gate-input ${errorMessage ? "has-error" : ""}`}
-                    autoComplete="current-password"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="case-gate-toggle-pwd"
-                    aria-label={showPassword ? "Hide password" : "Show password"}
-                  >
-                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                  </button>
-                </div>
-
-                {errorMessage && (
-                  <div className="case-gate-error-msg">{errorMessage}</div>
-                )}
-
-                <button type="submit" className="case-gate-submit-btn">
-                  <span>Unlock Case Study</span>
-                  <ArrowRight size={15} />
-                </button>
-              </form>
-
-              {/* Access Request Note (Masked from scrapers) */}
-              <div className="case-gate-hint-box">
-                <span className="case-gate-hint-text">
-                  For portfolio review access, please contact{" "}
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      const u = "nithin161298";
-                      const d = "gmail.com";
-                      const email = `${u}@${d}`;
-                      const subject = encodeURIComponent("Portfolio Review Access Request · Blazeup Compliance");
-                      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-                      if (isMobile) {
-                        window.location.href = `mailto:${email}?subject=${subject}`;
-                      } else {
-                        window.open(`https://mail.google.com/mail/?view=cm&fs=1&to=${email}&su=${subject}`, '_blank', 'noopener,noreferrer');
-                      }
-                    }}
-                    className="case-gate-contact-link"
-                    style={{
-                      background: "none",
-                      border: "none",
-                      padding: 0,
-                      color: "inherit",
-                      textDecoration: "underline",
-                      cursor: "pointer",
-                      font: "inherit",
-                    }}
-                  >
-                    via Email
-                  </button>
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // ── UNLOCKED CASE STUDY VIEW ──
   return (
     <div className="case-study-page">
       {/* ── Reading Progress Bar ── */}
@@ -477,7 +316,7 @@ export default function BlazeupCaseStudy({ onBack, onNavigate }) {
       {/* ── 01. INTRO / HERO SECTION ── */}
       <section id="intro" className="case-band case-band-canvas case-hero">
         <div className="container">
-          {/* Top Bar: Back Link + Re-Lock Button */}
+          {/* Top Bar: Back Link + Case Category Badge */}
           <div className="case-top-bar">
             <a
               href="#work"
@@ -492,15 +331,9 @@ export default function BlazeupCaseStudy({ onBack, onNavigate }) {
               <span>Back to Selected Work</span>
             </a>
 
-            <button
-              type="button"
-              onClick={handleLock}
-              className="case-lock-status-btn"
-              title="Lock this case study"
-            >
-              <Unlock size={14} />
-              <span>Protected · Click to Lock</span>
-            </button>
+            <div className="case-lock-status-btn" style={{ cursor: "default" }}>
+              <span>Case Study 01 · Enterprise SaaS</span>
+            </div>
           </div>
 
           {/* Eyebrow */}
